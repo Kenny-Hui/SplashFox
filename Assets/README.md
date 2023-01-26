@@ -1,0 +1,2 @@
+- splashfox.svg - Original Image
+- splashfox_padded.svg - Used on modrinth to accommodate the rounded corner
