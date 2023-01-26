@@ -1,0 +1,94 @@
+package com.lx.splashfox.screen;
+
+import com.lx.splashfox.SplashFox;
+import com.lx.splashfox.screen.widget.TexturedButton;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+
+import java.net.URI;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Consumer;
+
+public class ChooseImageScreen extends Screen {
+    private static final double SCREEN_WIDTH_FACTOR = 0.75;
+    private static final int PADDING = 20;
+    private static final int BUTTON_SIZE = 40;
+    private final Consumer<Identifier> callback;
+    private final List<TexturedButton> iconButtons;
+    private final Screen parentScreen;
+    private Identifier selectedPath;
+    private final ButtonWidget cancelButton;
+
+    public ChooseImageScreen(Screen parentScreen, Identifier initialPath, Consumer<Identifier> callback) {
+        super(Text.literal("Choose an image"));
+        this.selectedPath = initialPath;
+        this.callback = callback;
+        this.parentScreen = parentScreen;
+        cancelButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.cancel"), (btn) -> {
+            close();
+        }).build();
+        iconButtons = new ArrayList<>();
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        List<String> imageLabel = new ArrayList<>();
+        try {
+            iconButtons.clear();
+            URI localResource = SplashFox.class.getResource("/assets/splashfox/textures/gui/").toURI();
+            Path localResourcePath = Path.of(localResource);
+            Files.list(localResourcePath).forEach(filePath -> {
+                String fileName = filePath.getFileName().toString();
+                Identifier textureID = new Identifier("splashfox:textures/gui/" + fileName);
+                TexturedButton texturedButton = new TexturedButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, 0, 0, selectedPath.equals(textureID), textureID, BUTTON_SIZE, BUTTON_SIZE, e -> {
+                    selectedPath = textureID;
+                    close();
+                }, Text.literal(filePath.getFileName().toString()));
+                imageLabel.add(fileName);
+                iconButtons.add(texturedButton);
+            });
+        } catch (Exception ex) {
+
+        }
+
+        double fullScreenWidth = client.getWindow().getScaledWidth() * SCREEN_WIDTH_FACTOR;
+        int startX = (int)(client.getWindow().getScaledWidth() - fullScreenWidth) / 2;
+        int x = 0;
+        int y = 0;
+        for(int i = 0; i < iconButtons.size(); i++) {
+            TexturedButton button = iconButtons.get(i);
+
+            int nextX = x + button.getWidth();
+            if(nextX > fullScreenWidth) {
+                x = 0;
+                y += button.getHeight() + PADDING;
+            }
+            button.setX(startX + x);
+            button.setY(y);
+            x += button.getWidth() + PADDING;
+            addDrawableChild(button);
+        }
+        cancelButton.setWidth(50);
+        cancelButton.setX(client.getWindow().getScaledWidth() - cancelButton.getWidth());
+        addDrawableChild(cancelButton);
+    }
+
+    @Override
+    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        renderBackground(matrices);
+        super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    @Override
+    public void close() {
+        this.client.setScreen(parentScreen);
+        callback.accept(selectedPath);
+    }
+}

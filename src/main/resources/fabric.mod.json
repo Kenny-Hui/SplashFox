@@ -1,0 +1,42 @@
+{
+  "schemaVersion": 1,
+  "id": "splashfox",
+  "version": "${version}",
+
+  "name": "SplashFox",
+  "description": "Add a bouncy Blobfox to your loading screen.",
+  "authors": [
+    "LX86"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/splashfox",
+    "sources": "https://github.com/Kenny-Hui/SplashFox",
+    "issues": "https://github.com/Kenny-Hui/SplashFox/issues"
+  },
+
+  "license": "MIT",
+  "icon": "assets/splashfox/icon.png",
+
+  "environment": "*",
+  "entrypoints": {
+    "client": [
+      "com.lx.splashfox.SplashFox"
+    ],
+    "modmenu": [
+      "com.lx.splashfox.Config.ModMenuConfig"
+    ]
+  },
+  "mixins": [
+    "splashfox.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": "*",
+    "minecraft": ">=1.17",
+    "java": ">=16"
+  },
+  "suggests": {
+    "smoothboot": "*",
+    "lazydfu": "*"
+  }
+}
