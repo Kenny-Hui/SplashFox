@@ -1,6 +1,5 @@
 package com.lx.splashfox.mixin;
 
-import com.lx.splashfox.Data.Position;
 import com.lx.splashfox.Data.EmptyTexture;
 import com.lx.splashfox.SplashFox;
 import com.lx.splashfox.render.FoxRenderer;
@@ -26,12 +25,14 @@ public class SplashOverlayMixin {
 	@Shadow @Final
 	static Identifier LOGO;
 	private double elapsed;
+	private static boolean mojangLogoUnloaded;
 	private FoxRenderer renderer;
 
 	@Inject(at = @At("HEAD"), method = "init", cancellable = true)
 	private static void init(MinecraftClient client, CallbackInfo ci) {
-		// Init is only called once when
-		if(SplashFox.config.position == Position.REPLACE_MOJANG) {
+		mojangLogoUnloaded = SplashFox.config.position.mojangLogoHidden;
+
+		if(SplashFox.config.position.mojangLogoHidden) {
 			client.getTextureManager().registerTexture(LOGO, new EmptyTexture(LOGO));
 			ci.cancel();
 		}
@@ -39,6 +40,12 @@ public class SplashOverlayMixin {
 
 	@Inject(at = @At("TAIL"), method = "render")
 	private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+		// init method only called once on startup, call init again on mismatched settings
+		if((mojangLogoUnloaded && !SplashFox.config.position.mojangLogoHidden) ||
+				(!mojangLogoUnloaded && SplashFox.config.position.mojangLogoHidden)) {
+			SplashOverlay.init(client);
+		}
+
 		if(renderer == null) renderer = new FoxRenderer();
 		elapsed += delta;
 		renderer.render(this.client, matrices, SplashFox.config.position, SplashFox.config, mouseX, mouseY, elapsed, getOverlayAlpha());
