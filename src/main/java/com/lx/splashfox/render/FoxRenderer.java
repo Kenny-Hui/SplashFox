@@ -64,8 +64,9 @@ public class FoxRenderer {
 
         if(wobbly && shiftYProgress <= 0) {
             // Deform the fox
+            float deformScale = (float)(shiftYProgress * (config.dropHeight * 0.75));
             matrices.translate(size / 2.0, size, 0);
-            matrices.scale(1 - (float) shiftYProgress, 1 + (float) shiftYProgress, 1);
+            matrices.scale(1 - deformScale, 1 + deformScale, 1);
             matrices.translate(-(size / 2.0), -size, 0);
         }
 
