@@ -22,7 +22,10 @@ public class ChooseImageScreen extends Screen {
     private final Consumer<Identifier> callback;
     private final List<TexturedButton> iconButtons;
     private final Screen parentScreen;
+    private final int scrollMultiplier = 8;
     private Identifier selectedPath;
+    private double scrolledOffset = 0;
+    private int totalHeight = 0;
     private final ButtonWidget cancelButton;
 
     public ChooseImageScreen(Screen parentScreen, Identifier initialPath, Consumer<Identifier> callback) {
@@ -39,7 +42,6 @@ public class ChooseImageScreen extends Screen {
     @Override
     protected void init() {
         super.init();
-        List<String> imageLabel = new ArrayList<>();
         try {
             iconButtons.clear();
             URI localResource = SplashFox.class.getResource("/assets/splashfox/textures/gui/").toURI();
@@ -51,11 +53,9 @@ public class ChooseImageScreen extends Screen {
                     selectedPath = textureID;
                     close();
                 }, Text.literal(filePath.getFileName().toString()));
-                imageLabel.add(fileName);
                 iconButtons.add(texturedButton);
             });
         } catch (Exception ex) {
-
         }
 
         double fullScreenWidth = client.getWindow().getScaledWidth() * SCREEN_WIDTH_FACTOR;
@@ -78,12 +78,27 @@ public class ChooseImageScreen extends Screen {
         cancelButton.setWidth(50);
         cancelButton.setX(client.getWindow().getScaledWidth() - cancelButton.getWidth());
         addDrawableChild(cancelButton);
+        totalHeight = y + BUTTON_SIZE;
+    }
+
+    private void positionButtonOffset(double offset) {
+        for(TexturedButton button : iconButtons) {
+            button.setYOffset((int)-offset);
+        }
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         renderBackground(matrices);
         super.render(matrices, mouseX, mouseY, delta);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
+        int screenHeight = client.getWindow().getScaledHeight();
+        scrolledOffset = Math.min(Math.max(0, scrolledOffset - (scrollAmount * scrollMultiplier)), totalHeight - screenHeight);
+        positionButtonOffset(scrolledOffset);
+        return super.mouseScrolled(mouseX, mouseY, scrollAmount);
     }
 
     @Override
