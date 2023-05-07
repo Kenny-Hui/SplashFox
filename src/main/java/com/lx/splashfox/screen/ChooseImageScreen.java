@@ -3,10 +3,12 @@ package com.lx.splashfox.screen;
 import com.lx.splashfox.SplashFox;
 import com.lx.splashfox.screen.widget.TexturedButton;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import org.lwjgl.glfw.GLFW;
 
 import java.net.URI;
 import java.nio.file.Files;
@@ -95,15 +97,30 @@ public class ChooseImageScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
-        int screenHeight = client.getWindow().getScaledHeight();
-        scrolledOffset = Math.min(Math.max(0, scrolledOffset - (scrollAmount * scrollMultiplier)), totalHeight - screenHeight);
-        positionButtonOffset(scrolledOffset);
+        scrollButtonWidgets(scrollAmount);
         return super.mouseScrolled(mouseX, mouseY, scrollAmount);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if(keyCode == GLFW.GLFW_KEY_DOWN) {
+            scrollButtonWidgets(-1);
+        }
+        if(keyCode == GLFW.GLFW_KEY_UP) {
+            scrollButtonWidgets(1);
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
     public void close() {
         this.client.setScreen(parentScreen);
         callback.accept(selectedPath);
+    }
+
+    private void scrollButtonWidgets(double amount) {
+        int screenHeight = client.getWindow().getScaledHeight();
+        scrolledOffset = Math.min(Math.max(0, scrolledOffset - (amount * scrollMultiplier)), totalHeight - screenHeight);
+        positionButtonOffset(scrolledOffset);
     }
 }
