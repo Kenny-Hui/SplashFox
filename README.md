@@ -1,7 +1,7 @@
 # SplashFox
 A mod that displays a bouncy blobfox on Minecraft loading screen, because why not.  
 
-**This mod only officially works on 1.19.x**.  
+**This mod only officially works on >= 1.19.3**.  
 With that being said, it's just a simple mixin and will work on versions >= 1.17.  
 Just note that the Config GUI won't work and I won't provide explicit support for it.
 
