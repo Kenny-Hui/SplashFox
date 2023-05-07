@@ -1,9 +1,9 @@
-package com.lx.splashfox.Config;
+package com.lx.splashfox.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.lx.splashfox.Data.Position;
+import com.lx.splashfox.data.Position;
 import com.lx.splashfox.SplashFox;
 import net.fabricmc.loader.api.FabricLoader;
 

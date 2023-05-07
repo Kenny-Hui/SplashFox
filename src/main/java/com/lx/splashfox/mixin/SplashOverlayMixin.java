@@ -1,6 +1,6 @@
 package com.lx.splashfox.mixin;
 
-import com.lx.splashfox.Data.EmptyTexture;
+import com.lx.splashfox.data.EmptyTexture;
 import com.lx.splashfox.SplashFox;
 import com.lx.splashfox.render.FoxRenderer;
 import net.minecraft.client.MinecraftClient;

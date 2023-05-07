@@ -1,6 +1,6 @@
 package com.lx.splashfox;
 
-import com.lx.splashfox.Config.Config;
+import com.lx.splashfox.config.Config;
 import net.fabricmc.api.ClientModInitializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

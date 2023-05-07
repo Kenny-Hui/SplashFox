@@ -1,8 +1,8 @@
 package com.lx.splashfox.screen;
 
-import com.lx.splashfox.Config.Config;
-import com.lx.splashfox.Data.Position;
-import com.lx.splashfox.Data.ScreenAlignment;
+import com.lx.splashfox.config.Config;
+import com.lx.splashfox.data.Position;
+import com.lx.splashfox.data.ScreenAlignment;
 import com.lx.splashfox.SplashFox;
 import com.lx.splashfox.render.FoxRenderer;
 import com.lx.splashfox.screen.widget.Checkbox;

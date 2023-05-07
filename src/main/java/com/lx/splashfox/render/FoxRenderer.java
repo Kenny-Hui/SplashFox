@@ -1,7 +1,7 @@
 package com.lx.splashfox.render;
 
-import com.lx.splashfox.Config.Config;
-import com.lx.splashfox.Data.Position;
+import com.lx.splashfox.config.Config;
+import com.lx.splashfox.data.Position;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;

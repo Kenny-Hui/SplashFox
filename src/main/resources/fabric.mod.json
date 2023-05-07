@@ -23,7 +23,7 @@
       "com.lx.splashfox.SplashFox"
     ],
     "modmenu": [
-      "com.lx.splashfox.Config.ModMenuConfig"
+      "com.lx.splashfox.config.ModMenuConfig"
     ]
   },
   "mixins": [

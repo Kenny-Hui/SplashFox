@@ -1,4 +1,4 @@
-package com.lx.splashfox.Data;
+package com.lx.splashfox.data;
 
 import net.minecraft.client.resource.metadata.TextureResourceMetadata;
 import net.minecraft.client.texture.NativeImage;
