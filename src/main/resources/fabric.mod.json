@@ -32,11 +32,10 @@
 
   "depends": {
     "fabricloader": "*",
-    "minecraft": ">=1.17",
-    "java": ">=16"
+    "minecraft": ">1.19.4",
+    "java": ">=17"
   },
   "suggests": {
-    "smoothboot": "*",
-    "lazydfu": "*"
+    "smoothboot": "*"
   }
 }

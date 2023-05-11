@@ -4,7 +4,7 @@ import com.lx.splashfox.config.Config;
 import com.lx.splashfox.data.Position;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
@@ -12,9 +12,10 @@ import net.minecraft.util.Identifier;
 public class FoxRenderer {
     private double shiftY = 0;
     private double shiftYProgress = 0;
-    public void render(MinecraftClient client, MatrixStack matrices, Position position, Config config, int mouseX, int mouseY, double elapsed, float alpha) {
+    public void render(MinecraftClient client, DrawContext drawContext, Position position, Config config, int mouseX, int mouseY, double elapsed, float alpha) {
         double d = Math.min((double)client.getWindow().getScaledWidth() * 0.75, client.getWindow().getScaledHeight()) * 0.25;
         int splashScreenScale = (int)(d * 0.5);
+        MatrixStack matrices = drawContext.getMatrices();
 
         double size = config.foxSize * splashScreenScale;
         double dropHeight = config.dropHeight * splashScreenScale;
@@ -70,12 +71,10 @@ public class FoxRenderer {
             matrices.translate(-(size / 2.0), -size, 0);
         }
 
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
-        RenderSystem.setShaderTexture(0, new Identifier(imagePath));
+//        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-
-        DrawableHelper.drawTexture(matrices, 0, 0, 0, 0, (int)size, (int)size, (int)(flipped ? -size : size), (int)size);
+        drawContext.drawTexture(new Identifier(imagePath), 0, 0, 0, 0, (int)size, (int)size, (int)(flipped ? -size : size), (int)size);
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
 

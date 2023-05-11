@@ -4,8 +4,8 @@ import com.lx.splashfox.data.EmptyTexture;
 import com.lx.splashfox.SplashFox;
 import com.lx.splashfox.render.FoxRenderer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.SplashOverlay;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
@@ -39,7 +39,7 @@ public class SplashOverlayMixin {
 	}
 
 	@Inject(at = @At("TAIL"), method = "render")
-	private void render(MatrixStack matrices, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+	private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		// init method only called once on startup, call init again on mismatched settings
 		if((mojangLogoUnloaded && !SplashFox.config.position.mojangLogoHidden) ||
 				(!mojangLogoUnloaded && SplashFox.config.position.mojangLogoHidden)) {
@@ -48,7 +48,7 @@ public class SplashOverlayMixin {
 
 		if(renderer == null) renderer = new FoxRenderer();
 		elapsed += delta;
-		renderer.render(this.client, matrices, SplashFox.config.position, SplashFox.config, mouseX, mouseY, elapsed, getOverlayAlpha());
+		renderer.render(this.client, context, SplashFox.config.position, SplashFox.config, mouseX, mouseY, elapsed, getOverlayAlpha());
 	}
 
 	private float getOverlayAlpha() {

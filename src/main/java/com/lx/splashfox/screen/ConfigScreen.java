@@ -8,6 +8,7 @@ import com.lx.splashfox.render.FoxRenderer;
 import com.lx.splashfox.screen.widget.Checkbox;
 import com.lx.splashfox.screen.widget.Slider;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -157,9 +158,9 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         elapsed += delta;
-        renderBackground(matrices);
+        renderBackground(drawContext);
         if(client == null) return;
 
         TextRenderer textRenderer = client.textRenderer;
@@ -167,17 +168,17 @@ public class ConfigScreen extends Screen {
         // Render text label
         for(Pair<String, Integer> label : labels) {
             int y = label.getRight() + textRenderer.fontHeight;
-            textRenderer.drawWithShadow(matrices, Text.translatable(label.getLeft()), getStartX(), y, 0xFFFFFF);
+            drawContext.drawTextWithShadow(textRenderer, Text.translatable(label.getLeft()), getStartX(), y, 0xFFFFFF);
         }
 
         // Render fox preview :D
         try {
-            foxRenderer.render(client, matrices, null, sessionInstance, mouseX, mouseY, elapsed, 1.0f);
+            foxRenderer.render(client, drawContext, null, sessionInstance, mouseX, mouseY, elapsed, 1.0f);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(drawContext, mouseX, mouseY, delta);
     }
 
     @Override
