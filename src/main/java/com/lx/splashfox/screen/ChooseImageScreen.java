@@ -1,12 +1,10 @@
 package com.lx.splashfox.screen;
 
 import com.lx.splashfox.SplashFox;
-import com.lx.splashfox.screen.widget.TexturedButton;
+import com.lx.splashfox.screen.widget.SelectFoxButton;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.lwjgl.glfw.GLFW;
@@ -23,7 +21,7 @@ public class ChooseImageScreen extends Screen {
     private static final int PADDING = 20;
     private static final int BUTTON_SIZE = 40;
     private final Consumer<Identifier> callback;
-    private final List<TexturedButton> iconButtons;
+    private final List<SelectFoxButton> iconButtons;
     private final Screen parentScreen;
     private final int scrollMultiplier = 8;
     private Identifier selectedPath;
@@ -52,11 +50,11 @@ public class ChooseImageScreen extends Screen {
             Files.list(localResourcePath).forEach(filePath -> {
                 String fileName = filePath.getFileName().toString();
                 Identifier textureID = new Identifier("splashfox:textures/gui/" + fileName);
-                TexturedButton texturedButton = new TexturedButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, 0, 0, selectedPath.equals(textureID), textureID, BUTTON_SIZE, BUTTON_SIZE, e -> {
+                SelectFoxButton selectFoxButton = new SelectFoxButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, 0, 0, selectedPath.equals(textureID), textureID, BUTTON_SIZE, BUTTON_SIZE, e -> {
                     selectedPath = textureID;
                     close();
                 }, Text.literal(filePath.getFileName().toString()));
-                iconButtons.add(texturedButton);
+                iconButtons.add(selectFoxButton);
             });
         } catch (Exception ex) {
         }
@@ -66,7 +64,7 @@ public class ChooseImageScreen extends Screen {
         int x = 0;
         int y = 0;
         for(int i = 0; i < iconButtons.size(); i++) {
-            TexturedButton button = iconButtons.get(i);
+            SelectFoxButton button = iconButtons.get(i);
 
             int nextX = x + button.getWidth();
             if(nextX > fullScreenWidth) {
@@ -85,7 +83,7 @@ public class ChooseImageScreen extends Screen {
     }
 
     private void positionButtonOffset(double offset) {
-        for(TexturedButton button : iconButtons) {
+        for(SelectFoxButton button : iconButtons) {
             button.setYOffset((int)-offset);
         }
     }

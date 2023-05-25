@@ -4,15 +4,14 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.client.render.GameRenderer;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class TexturedButton extends TexturedButtonWidget {
+public class SelectFoxButton extends TexturedButtonWidget {
     private final boolean selected;
     private int baseY;
     private static final int PADDING = 2;
-    public TexturedButton(int x, int y, int width, int height, int u, int v, boolean selected, Identifier texture, int textureWidth, int textureHeight, PressAction pressAction, Text message) {
+    public SelectFoxButton(int x, int y, int width, int height, int u, int v, boolean selected, Identifier texture, int textureWidth, int textureHeight, PressAction pressAction, Text message) {
         super(x, y, width, height, u, v, 0, texture, textureWidth, textureHeight, pressAction, message);
         this.baseY = y;
         this.selected = selected;

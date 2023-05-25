@@ -40,15 +40,19 @@ public class SplashOverlayMixin {
 
 	@Inject(at = @At("TAIL"), method = "render")
 	private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-		// init method only called once on startup, call init again on mismatched settings
-		if((mojangLogoUnloaded && !SplashFox.config.position.mojangLogoHidden) ||
-				(!mojangLogoUnloaded && SplashFox.config.position.mojangLogoHidden)) {
-			SplashOverlay.init(client);
-		}
+		ensureCorrectMojangLogoVisiblity();
 
 		if(renderer == null) renderer = new FoxRenderer();
 		elapsed += delta;
 		renderer.render(this.client, context, SplashFox.config.position, SplashFox.config, mouseX, mouseY, elapsed, getOverlayAlpha());
+	}
+
+	// The init method is only called once on startup, call init to register the logo again if state does not match
+	private void ensureCorrectMojangLogoVisiblity() {
+		if((mojangLogoUnloaded && !SplashFox.config.position.mojangLogoHidden) ||
+				(!mojangLogoUnloaded && SplashFox.config.position.mojangLogoHidden)) {
+			SplashOverlay.init(client);
+		}
 	}
 
 	private float getOverlayAlpha() {

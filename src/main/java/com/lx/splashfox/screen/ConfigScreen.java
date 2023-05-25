@@ -1,7 +1,7 @@
 package com.lx.splashfox.screen;
 
 import com.lx.splashfox.config.Config;
-import com.lx.splashfox.data.Position;
+import com.lx.splashfox.data.FoxPosition;
 import com.lx.splashfox.data.ScreenAlignment;
 import com.lx.splashfox.SplashFox;
 import com.lx.splashfox.render.FoxRenderer;
@@ -12,7 +12,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -38,16 +37,16 @@ public class ConfigScreen extends Screen {
 
     public ConfigScreen() {
         super(Text.translatable("splashfox.gui.config_title"));
-        // Make another instance of config so changes will apply to this config screen but not globally if we don't want to save
+        // Make another instance of config so changes only apply if the user click save
         sessionInstance = Config.readConfig();
         foxRenderer = new FoxRenderer();
         labels = new ArrayList<>();
 
-        int i = 0;
+        int curY = 0;
 
-        labels.add(new Pair<>("splashfox.gui.config_title", i));
+        labels.add(new Pair<>("splashfox.gui.config_title", curY));
 
-        i += 40;
+        curY += 40;
 
         chooseImageButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.choose"), (d) -> {
             Identifier currentImageId = new Identifier(sessionInstance.imagePath);
@@ -57,59 +56,59 @@ public class ConfigScreen extends Screen {
 
             client.setScreen(chooseImageScreen);
         }).build();
-        chooseImageButton.setY(i);
-        labels.add(new Pair<>("splashfox.gui.choose_img", i));
+        chooseImageButton.setY(curY);
+        labels.add(new Pair<>("splashfox.gui.choose_img", curY));
 
-        i += 20;
+        curY += 20;
 
-        speedSlider = new Slider(0, i, 100, 20, Text.literal(String.valueOf(sessionInstance.speed)), sessionInstance.speed, 2, (slider) -> {
+        speedSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(sessionInstance.speed)), sessionInstance.speed, 2, (slider) -> {
             double val = slider.getValue();
             sessionInstance.speed = val;
         });
-        labels.add(new Pair<>("splashfox.gui.speed", i));
+        labels.add(new Pair<>("splashfox.gui.speed", curY));
 
-        i += 20;
+        curY += 20;
 
-        dropHeightSlider = new Slider(0, i, 100, 20, Text.literal(String.valueOf(sessionInstance.dropHeight)), sessionInstance.dropHeight, 3, (slider) -> {
+        dropHeightSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(sessionInstance.dropHeight)), sessionInstance.dropHeight, 3, (slider) -> {
             double val = slider.getValue();
             sessionInstance.dropHeight = val;
         });
-        labels.add(new Pair<>("splashfox.gui.drop_height", i));
+        labels.add(new Pair<>("splashfox.gui.drop_height", curY));
 
-        i += 20;
+        curY += 20;
 
-        foxSizeSlider = new Slider(0, i, 100, 20, Text.literal(String.valueOf(sessionInstance.foxSize)), sessionInstance.foxSize, 2, (slider) -> {
+        foxSizeSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(sessionInstance.foxSize)), sessionInstance.foxSize, 2, (slider) -> {
             double val = slider.getValue();
             sessionInstance.foxSize = val;
         });
-        labels.add(new Pair<>("splashfox.gui.blobfox_size", i));
+        labels.add(new Pair<>("splashfox.gui.blobfox_size", curY));
 
-        i += 20;
+        curY += 20;
 
-        flippedCheckbox = new Checkbox(0, i, 20, 20, Text.literal(""), sessionInstance.flipped, (checked) -> {
+        flippedCheckbox = new Checkbox(0, curY, 20, 20, Text.literal(""), sessionInstance.flipped, (checked) -> {
             sessionInstance.flipped = checked;
         });
-        labels.add(new Pair<>("splashfox.gui.flipped", i));
+        labels.add(new Pair<>("splashfox.gui.flipped", curY));
 
-        i += 20;
+        curY += 20;
 
-        wobblyCheckbox = new Checkbox(0, i, 20, 20, Text.literal(""), sessionInstance.wobbly, (checked) -> {
+        wobblyCheckbox = new Checkbox(0, curY, 20, 20, Text.literal(""), sessionInstance.wobbly, (checked) -> {
             sessionInstance.wobbly = checked;
         });
-        labels.add(new Pair<>("splashfox.gui.wobbly", i));
+        labels.add(new Pair<>("splashfox.gui.wobbly", curY));
 
-        i += 20;
+        curY += 20;
 
         positionButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.position." + sessionInstance.position.toString()), (d) -> {
             int index = sessionInstance.position.ordinal();
-            sessionInstance.position = Position.values()[(index + 1) % Position.values().length];
+            sessionInstance.position = FoxPosition.values()[(index + 1) % FoxPosition.values().length];
             d.setMessage(Text.translatable("splashfox.gui.position." + sessionInstance.position.toString()));
         }).build();
 
-        positionButton.setY(i);
-        labels.add(new Pair<>("splashfox.gui.position", i));
+        positionButton.setY(curY);
+        labels.add(new Pair<>("splashfox.gui.position", curY));
 
-        i += 20;
+        curY += 20;
 
         discardButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.discard_config"), (d) -> {
             close();
@@ -159,11 +158,10 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        if(client == null) return;
+        TextRenderer textRenderer = client.textRenderer;
         elapsed += delta;
         renderBackground(drawContext);
-        if(client == null) return;
-
-        TextRenderer textRenderer = client.textRenderer;
 
         // Render text label
         for(Pair<String, Integer> label : labels) {

@@ -3,7 +3,7 @@ package com.lx.splashfox.config;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.lx.splashfox.data.Position;
+import com.lx.splashfox.data.FoxPosition;
 import com.lx.splashfox.SplashFox;
 import net.fabricmc.loader.api.FabricLoader;
 
@@ -19,7 +19,7 @@ public class Config {
     public boolean flipped = false;
     public boolean wobbly = true;
     public String imagePath = "splashfox:textures/gui/blobfox.png";
-    public Position position = Position.ABOVE_MOJANG;
+    public FoxPosition position = FoxPosition.ABOVE_MOJANG;
 
     public static Config readConfig() {
         Path configFile = CONFIG_PATH.resolve("config.json");
