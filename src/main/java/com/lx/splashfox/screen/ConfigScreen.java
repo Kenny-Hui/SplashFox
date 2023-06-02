@@ -49,7 +49,7 @@ public class ConfigScreen extends Screen {
         curY += 40;
 
         chooseImageButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.choose"), (d) -> {
-            Identifier currentImageId = new Identifier(sessionInstance.imagePath);
+            Identifier currentImageId = sessionInstance.getFoxImageId();
             ChooseImageScreen chooseImageScreen = new ChooseImageScreen(this, currentImageId, (id) -> {
                 sessionInstance.imagePath = id.toString();
             });
@@ -115,6 +115,7 @@ public class ConfigScreen extends Screen {
         }).build();
 
         saveButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.save_config"), (d) -> {
+            Config.needUpdateTexture = true;
             Config.writeConfig(sessionInstance);
             SplashFox.config = Config.readConfig();
             close();

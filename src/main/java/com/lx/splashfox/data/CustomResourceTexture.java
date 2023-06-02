@@ -9,14 +9,14 @@ import net.minecraft.util.Identifier;
 import java.io.IOException;
 import java.io.InputStream;
 
-public class EmptyTexture extends ResourceTexture {
-    public EmptyTexture(Identifier location) {
+public class CustomResourceTexture extends ResourceTexture {
+    public CustomResourceTexture(Identifier location) {
         super(location);
     }
 
     protected TextureData loadTextureData(ResourceManager resourceManager) {
         try {
-            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/splashfox/textures/empty.png");
+            InputStream input = Thread.currentThread().getContextClassLoader().getResourceAsStream("assets/" + location.getNamespace() + "/" + location.getPath());
             TextureData texture = null;
 
             if(input != null) {

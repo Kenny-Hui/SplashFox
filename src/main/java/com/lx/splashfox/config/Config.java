@@ -6,6 +6,7 @@ import com.google.gson.JsonElement;
 import com.lx.splashfox.data.FoxPosition;
 import com.lx.splashfox.SplashFox;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.util.Identifier;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -13,6 +14,7 @@ import java.util.Collections;
 
 public class Config {
     private static final Path CONFIG_PATH = FabricLoader.getInstance().getConfigDir().resolve("splashfox");
+    public static boolean needUpdateTexture = true;
     public double dropHeight = 1.5;
     public double foxSize = 1.5;
     public double speed = 1;
@@ -24,6 +26,8 @@ public class Config {
     public static Config readConfig() {
         Path configFile = CONFIG_PATH.resolve("config.json");
         if(Files.exists(configFile)) {
+            needUpdateTexture = true;
+
             SplashFox.LOGGER.info("[SplashFox] Reading Config...");
             try {
                 return new Gson().fromJson(Files.readString(configFile), Config.class);
@@ -35,6 +39,10 @@ public class Config {
             writeConfig(new Config());
         }
         return new Config();
+    }
+
+    public Identifier getFoxImageId() {
+        return new Identifier(imagePath);
     }
 
     public static void writeConfig(Config instance) {

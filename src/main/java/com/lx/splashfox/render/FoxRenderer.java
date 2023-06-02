@@ -21,7 +21,7 @@ public class FoxRenderer {
         double speedFactor = config.speed;
         boolean wobbly = config.wobbly;
         boolean flipped = config.flipped;
-        String imagePath = config.imagePath;
+        Identifier foxImage = config.getFoxImageId();
 
         double centeredScreenWidth = (client.getWindow().getScaledWidth() / 2.0) - (size / 2);
         double centeredScreenHeight = (client.getWindow().getScaledHeight() / 2.0) - dropHeight;
@@ -72,7 +72,7 @@ public class FoxRenderer {
 
         RenderSystem.enableBlend();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        drawContext.drawTexture(new Identifier(imagePath), 0, 0, 0, 0, (int)size, (int)size, (int)(flipped ? -size : size), (int)size);
+        drawContext.drawTexture(foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)(flipped ? -size : size), (int)size);
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
 

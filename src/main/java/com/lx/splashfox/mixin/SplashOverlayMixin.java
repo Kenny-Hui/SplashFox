@@ -1,6 +1,7 @@
 package com.lx.splashfox.mixin;
 
-import com.lx.splashfox.data.EmptyTexture;
+import com.lx.splashfox.config.Config;
+import com.lx.splashfox.data.CustomResourceTexture;
 import com.lx.splashfox.SplashFox;
 import com.lx.splashfox.render.FoxRenderer;
 import net.minecraft.client.MinecraftClient;
@@ -18,6 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SplashOverlay.class)
 public class SplashOverlayMixin {
+	private static final Identifier EMPTY_LOGO = new Identifier("splashfox", "textures/empty.png");
 	@Shadow private long reloadCompleteTime;
 	@Shadow private long reloadStartTime;
 	@Shadow @Final private boolean reloading;
@@ -25,33 +27,33 @@ public class SplashOverlayMixin {
 	@Shadow @Final
 	static Identifier LOGO;
 	private double elapsed;
-	private static boolean mojangLogoUnloaded;
 	private FoxRenderer renderer;
 
 	@Inject(at = @At("HEAD"), method = "init", cancellable = true)
 	private static void init(MinecraftClient client, CallbackInfo ci) {
-		mojangLogoUnloaded = SplashFox.config.position.mojangLogoHidden;
+		client.getTextureManager().registerTexture(SplashFox.config.getFoxImageId(), new CustomResourceTexture(SplashFox.config.getFoxImageId()));
 
 		if(SplashFox.config.position.mojangLogoHidden) {
-			client.getTextureManager().registerTexture(LOGO, new EmptyTexture(LOGO));
+			client.getTextureManager().registerTexture(LOGO, new CustomResourceTexture(EMPTY_LOGO));
 			ci.cancel();
 		}
 	}
 
 	@Inject(at = @At("TAIL"), method = "render")
 	private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-		ensureCorrectMojangLogoVisiblity();
+		ensureTextureRegistered();
+
 
 		if(renderer == null) renderer = new FoxRenderer();
 		elapsed += delta;
 		renderer.render(this.client, context, SplashFox.config.position, SplashFox.config, mouseX, mouseY, elapsed, getOverlayAlpha());
 	}
 
-	// The init method is only called once on startup, call init to register the logo again if state does not match
-	private void ensureCorrectMojangLogoVisiblity() {
-		if((mojangLogoUnloaded && !SplashFox.config.position.mojangLogoHidden) ||
-				(!mojangLogoUnloaded && SplashFox.config.position.mojangLogoHidden)) {
+	// The init method is only called once on startup, call init again if any settings is mismatched
+	private void ensureTextureRegistered() {
+		if(Config.needUpdateTexture) {
 			SplashOverlay.init(client);
+			Config.needUpdateTexture = false;
 		}
 	}
 
