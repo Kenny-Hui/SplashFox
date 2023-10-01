@@ -20,10 +20,10 @@
   "environment": "*",
   "entrypoints": {
     "client": [
-      "com.lx.splashfox.SplashFox"
+      "com.lx862.splashfox.SplashFox"
     ],
     "modmenu": [
-      "com.lx.splashfox.config.ModMenuConfig"
+      "com.lx862.splashfox.config.ModMenuConfig"
     ]
   },
   "mixins": [
@@ -32,10 +32,6 @@
 
   "depends": {
     "fabricloader": "*",
-    "minecraft": ">1.19.4",
-    "java": ">=17"
-  },
-  "suggests": {
-    "smoothboot": "*"
+    "minecraft": ">=1.20.2"
   }
 }

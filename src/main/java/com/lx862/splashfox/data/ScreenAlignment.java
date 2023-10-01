@@ -1,4 +1,4 @@
-package com.lx.splashfox.data;
+package com.lx862.splashfox.data;
 
 public enum ScreenAlignment {
     LEFT,

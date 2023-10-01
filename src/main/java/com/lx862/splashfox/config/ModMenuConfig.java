@@ -1,8 +1,8 @@
-package com.lx.splashfox.config;
+package com.lx862.splashfox.config;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
-import com.lx.splashfox.screen.ConfigScreen;
+import com.lx862.splashfox.screen.ConfigScreen;
 
 public class ModMenuConfig implements ModMenuApi {
     @Override

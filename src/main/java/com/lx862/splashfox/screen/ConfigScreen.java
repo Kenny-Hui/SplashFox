@@ -1,12 +1,12 @@
-package com.lx.splashfox.screen;
+package com.lx862.splashfox.screen;
 
-import com.lx.splashfox.config.Config;
-import com.lx.splashfox.data.FoxPosition;
-import com.lx.splashfox.data.ScreenAlignment;
-import com.lx.splashfox.SplashFox;
-import com.lx.splashfox.render.FoxRenderer;
-import com.lx.splashfox.screen.widget.Checkbox;
-import com.lx.splashfox.screen.widget.Slider;
+import com.lx862.splashfox.config.Config;
+import com.lx862.splashfox.data.FoxPosition;
+import com.lx862.splashfox.data.ScreenAlignment;
+import com.lx862.splashfox.SplashFox;
+import com.lx862.splashfox.render.FoxRenderer;
+import com.lx862.splashfox.screen.widget.Checkbox;
+import com.lx862.splashfox.screen.widget.Slider;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
@@ -160,9 +160,9 @@ public class ConfigScreen extends Screen {
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(client == null) return;
+        super.render(drawContext, mouseX, mouseY, delta);
         TextRenderer textRenderer = client.textRenderer;
         elapsed += delta;
-        renderBackground(drawContext);
 
         // Render text label
         for(Pair<String, Integer> label : labels) {
@@ -176,8 +176,6 @@ public class ConfigScreen extends Screen {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-        super.render(drawContext, mouseX, mouseY, delta);
     }
 
     @Override

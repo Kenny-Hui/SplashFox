@@ -1,19 +1,21 @@
-package com.lx.splashfox.screen.widget;
+package com.lx862.splashfox.screen.widget;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class SelectFoxButton extends TexturedButtonWidget {
+public class SelectFoxButton extends ButtonWidget {
     private final boolean selected;
     private int baseY;
+    private final Identifier buttonTexture;
     private static final int PADDING = 2;
-    public SelectFoxButton(int x, int y, int width, int height, int u, int v, boolean selected, Identifier texture, int textureWidth, int textureHeight, PressAction pressAction, Text message) {
-        super(x, y, width, height, u, v, 0, texture, textureWidth, textureHeight, pressAction, message);
+    public SelectFoxButton(int x, int y, int width, int height, boolean selected, Identifier buttonTexture, ButtonWidget.PressAction pressAction, Text text) {
+        super(x, y, width, height, text, pressAction, DEFAULT_NARRATION_SUPPLIER);
         this.baseY = y;
+        this.buttonTexture = buttonTexture;
         this.selected = selected;
     }
 
@@ -31,7 +33,7 @@ public class SelectFoxButton extends TexturedButtonWidget {
             drawContext.fill(getX() - PADDING, getY() - PADDING, getX() + width + PADDING, getY() + height + PADDING, 0xFFFFFFFF);
             RenderSystem.setShaderColor(1, 1, 1, 1);
         }
-        super.renderButton(drawContext, mouseX, mouseY, delta);
+        drawContext.drawTexture(buttonTexture, this.getX(), this.getY(), 0, 0, this.width, this.height, this.width, this.height);
     }
 
     @Override

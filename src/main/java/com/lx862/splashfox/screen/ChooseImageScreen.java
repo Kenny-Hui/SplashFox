@@ -1,8 +1,9 @@
-package com.lx.splashfox.screen;
+package com.lx862.splashfox.screen;
 
-import com.lx.splashfox.SplashFox;
-import com.lx.splashfox.screen.widget.SelectFoxButton;
+import com.lx862.splashfox.SplashFox;
+import com.lx862.splashfox.screen.widget.SelectFoxButton;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -49,14 +50,15 @@ public class ChooseImageScreen extends Screen {
             Path localResourcePath = Path.of(localResource);
             Files.list(localResourcePath).forEach(filePath -> {
                 String fileName = filePath.getFileName().toString();
-                Identifier textureID = new Identifier("splashfox:textures/gui/" + fileName);
-                SelectFoxButton selectFoxButton = new SelectFoxButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, 0, 0, selectedPath.equals(textureID), textureID, BUTTON_SIZE, BUTTON_SIZE, e -> {
+                Identifier textureID = new Identifier("splashfox", "textures/gui/" + fileName);
+                SelectFoxButton selectFoxButton = new SelectFoxButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, selectedPath.equals(textureID), textureID, e -> {
                     selectedPath = textureID;
                     close();
                 }, Text.literal(filePath.getFileName().toString()));
                 iconButtons.add(selectFoxButton);
             });
         } catch (Exception ex) {
+            ex.printStackTrace();
         }
 
         double fullScreenWidth = client.getWindow().getScaledWidth() * SCREEN_WIDTH_FACTOR;
@@ -90,14 +92,14 @@ public class ChooseImageScreen extends Screen {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        renderBackground(drawContext);
+        renderBackground(drawContext, mouseX, mouseY, delta);
         super.render(drawContext, mouseX, mouseY, delta);
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollAmount) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double scrollAmount) {
         scrollButtonWidgets(scrollAmount);
-        return super.mouseScrolled(mouseX, mouseY, scrollAmount);
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, scrollAmount);
     }
 
     @Override

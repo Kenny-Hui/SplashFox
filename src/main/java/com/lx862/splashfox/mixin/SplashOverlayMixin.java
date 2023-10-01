@@ -1,9 +1,9 @@
-package com.lx.splashfox.mixin;
+package com.lx862.splashfox.mixin;
 
-import com.lx.splashfox.config.Config;
-import com.lx.splashfox.data.CustomResourceTexture;
-import com.lx.splashfox.SplashFox;
-import com.lx.splashfox.render.FoxRenderer;
+import com.lx862.splashfox.config.Config;
+import com.lx862.splashfox.data.CustomResourceTexture;
+import com.lx862.splashfox.SplashFox;
+import com.lx862.splashfox.render.FoxRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.SplashOverlay;

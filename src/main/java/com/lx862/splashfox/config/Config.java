@@ -1,10 +1,10 @@
-package com.lx.splashfox.config;
+package com.lx862.splashfox.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
-import com.lx.splashfox.data.FoxPosition;
-import com.lx.splashfox.SplashFox;
+import com.lx862.splashfox.data.FoxPosition;
+import com.lx862.splashfox.SplashFox;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.util.Identifier;
 

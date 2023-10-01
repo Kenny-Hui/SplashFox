@@ -1,7 +1,7 @@
-package com.lx.splashfox.render;
+package com.lx862.splashfox.render;
 
-import com.lx.splashfox.config.Config;
-import com.lx.splashfox.data.FoxPosition;
+import com.lx862.splashfox.config.Config;
+import com.lx862.splashfox.data.FoxPosition;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -74,7 +74,6 @@ public class FoxRenderer {
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
         drawContext.drawTexture(foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)(flipped ? -size : size), (int)size);
         RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
 
         matrices.pop();
 

@@ -1,4 +1,4 @@
-package com.lx.splashfox.screen.widget;
+package com.lx862.splashfox.screen.widget;
 
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.text.Text;
