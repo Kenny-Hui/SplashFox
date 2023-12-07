@@ -5,13 +5,15 @@ import com.lx862.splashfox.data.FoxPosition;
 import com.lx862.splashfox.data.ScreenAlignment;
 import com.lx862.splashfox.SplashFox;
 import com.lx862.splashfox.render.FoxRenderer;
-import com.lx862.splashfox.screen.widget.Checkbox;
 import com.lx862.splashfox.screen.widget.Slider;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -23,8 +25,8 @@ public class ConfigScreen extends Screen {
     private final Slider dropHeightSlider;
     private final Slider foxSizeSlider;
     private final Slider speedSlider;
-    private final Checkbox flippedCheckbox;
-    private final Checkbox wobblyCheckbox;
+    private final CheckboxWidget flippedCheckbox;
+    private final CheckboxWidget wobblyCheckbox;
     private final ButtonWidget chooseImageButton;
     private final ButtonWidget positionButton;
     private final ButtonWidget discardButton;
@@ -85,16 +87,22 @@ public class ConfigScreen extends Screen {
 
         curY += 20;
 
-        flippedCheckbox = new Checkbox(0, curY, 20, 20, Text.literal(""), sessionInstance.flipped, (checked) -> {
-            sessionInstance.flipped = checked;
-        });
+        flippedCheckbox = CheckboxWidget.builder(Text.literal(""), MinecraftClient.getInstance().textRenderer)
+                .checked(sessionInstance.flipped)
+                .pos(0, curY)
+                .callback((btn, checked) -> {
+                    sessionInstance.flipped = checked;
+                }).build();
         labels.add(new Pair<>("splashfox.gui.flipped", curY));
 
         curY += 20;
 
-        wobblyCheckbox = new Checkbox(0, curY, 20, 20, Text.literal(""), sessionInstance.wobbly, (checked) -> {
-            sessionInstance.wobbly = checked;
-        });
+        wobblyCheckbox = CheckboxWidget.builder(Text.literal(""), MinecraftClient.getInstance().textRenderer)
+                .checked(sessionInstance.wobbly)
+                .pos(0, curY)
+                .callback((btn, checked) -> {
+                    sessionInstance.wobbly = checked;
+                }).build();
         labels.add(new Pair<>("splashfox.gui.wobbly", curY));
 
         curY += 20;
@@ -155,20 +163,20 @@ public class ConfigScreen extends Screen {
         addDrawableChild(positionButton);
         addDrawableChild(discardButton);
         addDrawableChild(saveButton);
+
+        for(Pair<String, Integer> label : labels) {
+            TextWidget tw = new TextWidget(Text.translatable(label.getLeft()), MinecraftClient.getInstance().textRenderer);
+            tw.setX(getStartX());
+            tw.setY(label.getRight() + textRenderer.fontHeight);
+            addDrawableChild(tw);
+        }
     }
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if(client == null) return;
         super.render(drawContext, mouseX, mouseY, delta);
-        TextRenderer textRenderer = client.textRenderer;
         elapsed += delta;
-
-        // Render text label
-        for(Pair<String, Integer> label : labels) {
-            int y = label.getRight() + textRenderer.fontHeight;
-            drawContext.drawTextWithShadow(textRenderer, Text.translatable(label.getLeft()), getStartX(), y, 0xFFFFFF);
-        }
 
         // Render fox preview :D
         try {

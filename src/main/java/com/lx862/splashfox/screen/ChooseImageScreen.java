@@ -2,8 +2,8 @@ package com.lx862.splashfox.screen;
 
 import com.lx862.splashfox.SplashFox;
 import com.lx862.splashfox.screen.widget.SelectFoxButton;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -44,6 +44,11 @@ public class ChooseImageScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+
+        cancelButton.setWidth(50);
+        cancelButton.setX(client.getWindow().getScaledWidth() - cancelButton.getWidth());
+        addDrawableChild(cancelButton);
+
         try {
             iconButtons.clear();
             URI localResource = SplashFox.class.getResource("/assets/splashfox/textures/gui/").toURI();
@@ -51,6 +56,7 @@ public class ChooseImageScreen extends Screen {
             Files.list(localResourcePath).forEach(filePath -> {
                 String fileName = filePath.getFileName().toString();
                 Identifier textureID = new Identifier("splashfox", "textures/gui/" + fileName);
+                MinecraftClient.getInstance().getTextureManager().getTexture(textureID).bindTexture();
                 SelectFoxButton selectFoxButton = new SelectFoxButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, selectedPath.equals(textureID), textureID, e -> {
                     selectedPath = textureID;
                     close();
@@ -65,11 +71,10 @@ public class ChooseImageScreen extends Screen {
         int startX = (int)(client.getWindow().getScaledWidth() - fullScreenWidth) / 2;
         int x = 0;
         int y = 0;
-        for(int i = 0; i < iconButtons.size(); i++) {
-            SelectFoxButton button = iconButtons.get(i);
 
+        for (SelectFoxButton button : iconButtons) {
             int nextX = x + button.getWidth();
-            if(nextX > fullScreenWidth) {
+            if (nextX > fullScreenWidth) {
                 x = 0;
                 y += button.getHeight() + PADDING;
             }
@@ -78,9 +83,7 @@ public class ChooseImageScreen extends Screen {
             x += button.getWidth() + PADDING;
             addDrawableChild(button);
         }
-        cancelButton.setWidth(50);
-        cancelButton.setX(client.getWindow().getScaledWidth() - cancelButton.getWidth());
-        addDrawableChild(cancelButton);
+
         totalHeight = y + BUTTON_SIZE;
     }
 
@@ -92,7 +95,6 @@ public class ChooseImageScreen extends Screen {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        renderBackground(drawContext, mouseX, mouseY, delta);
         super.render(drawContext, mouseX, mouseY, delta);
     }
 
@@ -105,10 +107,10 @@ public class ChooseImageScreen extends Screen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if(keyCode == GLFW.GLFW_KEY_DOWN) {
-            scrollButtonWidgets(-1);
+            scrollButtonWidgets(-8);
         }
         if(keyCode == GLFW.GLFW_KEY_UP) {
-            scrollButtonWidgets(1);
+            scrollButtonWidgets(8);
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
     }
@@ -120,8 +122,7 @@ public class ChooseImageScreen extends Screen {
     }
 
     private void scrollButtonWidgets(double amount) {
-        int screenHeight = client.getWindow().getScaledHeight();
-        scrolledOffset = Math.min(Math.max(0, scrolledOffset - (amount * scrollMultiplier)), totalHeight - screenHeight);
+        scrolledOffset = Math.min(Math.max(0, scrolledOffset - (amount * scrollMultiplier)), totalHeight - height);
         positionButtonOffset(scrolledOffset);
     }
 }

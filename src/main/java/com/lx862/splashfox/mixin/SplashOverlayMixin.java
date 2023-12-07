@@ -43,7 +43,6 @@ public class SplashOverlayMixin {
 	private void render(DrawContext context, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		ensureTextureRegistered();
 
-
 		if(renderer == null) renderer = new FoxRenderer();
 		elapsed += delta;
 		renderer.render(this.client, context, SplashFox.config.position, SplashFox.config, mouseX, mouseY, elapsed, getOverlayAlpha());

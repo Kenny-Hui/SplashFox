@@ -20,14 +20,14 @@ public class SelectFoxButton extends ButtonWidget {
     }
 
     @Override
-    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         if(selected) {
             // Blue highlight background
             RenderSystem.setShaderColor(0.2f, 0.6f, 0.9f, 1);
             drawContext.fill(getX() - PADDING, getY() - PADDING, getX() + width + PADDING, getY() + height + PADDING, 0xFFFFFFFF);
             RenderSystem.setShaderColor(1, 1, 1, 1);
-        } else if (this.isHovered()) {
+        } else if (this.isHovered() || this.isFocused()) {
             // White highlight background
             RenderSystem.setShaderColor(1, 1, 1, 0.5f);
             drawContext.fill(getX() - PADDING, getY() - PADDING, getX() + width + PADDING, getY() + height + PADDING, 0xFFFFFFFF);

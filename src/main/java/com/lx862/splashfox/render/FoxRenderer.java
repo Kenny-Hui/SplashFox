@@ -62,6 +62,11 @@ public class FoxRenderer {
         matrices.push();
         matrices.translate(x, y, 0);
 
+        if(flipped) {
+            matrices.scale(-1, 1, 1);
+            matrices.translate(-size, 0, 0);
+        }
+
         if(wobbly && animationProgress <= 0) {
             // Deform the fox
             float deformScale = (float)(animationProgress * (config.dropHeight * 0.75));
@@ -71,10 +76,11 @@ public class FoxRenderer {
         }
 
         RenderSystem.enableBlend();
+        RenderSystem.disableCull();
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        drawContext.drawTexture(foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)(flipped ? -size : size), (int)size);
+        drawContext.drawTexture(foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)size, (int)size);
         RenderSystem.disableBlend();
-
+        RenderSystem.enableCull();
         matrices.pop();
 
         animationProgress = getBounceProgress(speedFactor, elapsed / 10, wobbly);
