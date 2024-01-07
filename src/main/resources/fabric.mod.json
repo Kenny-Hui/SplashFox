@@ -2,9 +2,8 @@
   "schemaVersion": 1,
   "id": "splashfox",
   "version": "${version}",
-
   "name": "SplashFox",
-  "description": "Add a bouncy Blobfox to your loading screen.",
+  "description": "Adds a bouncy Blobfox to your loading screen.",
   "authors": [
     "LX86"
   ],
@@ -13,11 +12,9 @@
     "sources": "https://github.com/Kenny-Hui/SplashFox",
     "issues": "https://github.com/Kenny-Hui/SplashFox/issues"
   },
-
   "license": "MIT",
   "icon": "assets/splashfox/icon.png",
-
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "com.lx862.splashfox.SplashFox"
@@ -29,9 +26,8 @@
   "mixins": [
     "splashfox.mixins.json"
   ],
-
   "depends": {
-    "fabricloader": "*",
+    "fabricloader": ">=0.14.25",
     "minecraft": ">=1.20.3"
   }
 }
