@@ -17,7 +17,7 @@
   "license": "MIT",
   "icon": "assets/splashfox/icon.png",
 
-  "environment": "*",
+  "environment": "client",
   "entrypoints": {
     "client": [
       "com.lx862.splashfox.SplashFox"
@@ -31,7 +31,7 @@
   ],
 
   "depends": {
-    "fabricloader": "*",
+    "fabricloader": ">=0.14.25",
     "minecraft": ">=1.20.3"
   }
 }
