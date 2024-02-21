@@ -7,12 +7,12 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
-public class SelectFoxButton extends ButtonWidget {
+public class ChooseButton extends ButtonWidget {
     private final boolean selected;
     private int baseY;
     private final Identifier buttonTexture;
-    private static final int PADDING = 2;
-    public SelectFoxButton(int x, int y, int width, int height, boolean selected, Identifier buttonTexture, ButtonWidget.PressAction pressAction, Text text) {
+    public static final int PADDING = 2;
+    public ChooseButton(int x, int y, int width, int height, boolean selected, Identifier buttonTexture, ButtonWidget.PressAction pressAction, Text text) {
         super(x, y, width, height, text, pressAction, DEFAULT_NARRATION_SUPPLIER);
         this.baseY = y;
         this.buttonTexture = buttonTexture;
@@ -21,17 +21,19 @@ public class SelectFoxButton extends ButtonWidget {
 
     @Override
     public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+//        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
+
+        int startX = getX() - PADDING;
+        int startY = getY() - PADDING;
+        int sizeWidth = getWidth() + PADDING + PADDING;
+        int sizeHeight = getHeight() + PADDING + PADDING;
+        int endX = getX() + getWidth() + PADDING;
+        int endY = getY() + getHeight() + PADDING;
         if(selected) {
-            // Blue highlight background
-            RenderSystem.setShaderColor(0.2f, 0.6f, 0.9f, 1);
-            drawContext.fill(getX() - PADDING, getY() - PADDING, getX() + width + PADDING, getY() + height + PADDING, 0xFFFFFFFF);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            drawContext.fill(startX, startY, endX, endY, 0xFF0088DD);
         } else if (this.isHovered() || this.isFocused()) {
-            // White highlight background
-            RenderSystem.setShaderColor(1, 1, 1, 0.5f);
-            drawContext.fill(getX() - PADDING, getY() - PADDING, getX() + width + PADDING, getY() + height + PADDING, 0xFFFFFFFF);
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+            // Selected
+            drawContext.drawBorder(startX, startY, sizeWidth, sizeHeight, 0xAAFFFFFF);
         }
         drawContext.drawTexture(buttonTexture, this.getX(), this.getY(), 0, 0, this.width, this.height, this.width, this.height);
     }

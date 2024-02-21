@@ -1,14 +1,15 @@
 package com.lx862.splashfox.screen;
 
 import com.lx862.splashfox.SplashFox;
-import com.lx862.splashfox.screen.widget.SelectFoxButton;
+import com.lx862.splashfox.screen.widget.ChooseButton;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import org.lwjgl.glfw.GLFW;
+import org.apache.commons.io.FilenameUtils;
 
 import java.net.URI;
 import java.nio.file.Files;
@@ -19,12 +20,12 @@ import java.util.function.Consumer;
 
 public class ChooseImageScreen extends Screen {
     private static final double SCREEN_WIDTH_FACTOR = 0.75;
-    private static final int PADDING = 20;
+    private static final int SCROLL_MULTIPLIER = 8;
+    private static final int BUTTON_Y_MARGIN = 20;
     private static final int BUTTON_SIZE = 40;
     private final Consumer<Identifier> callback;
-    private final List<SelectFoxButton> iconButtons;
+    private final List<ChooseButton> iconButtons;
     private final Screen parentScreen;
-    private final int scrollMultiplier = 8;
     private Identifier selectedPath;
     private double scrolledOffset = 0;
     private int totalHeight = 0;
@@ -37,7 +38,7 @@ public class ChooseImageScreen extends Screen {
         this.parentScreen = parentScreen;
         cancelButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.cancel"), (btn) -> {
             close();
-        }).build();
+        }).size(75, 20).build();
         iconButtons = new ArrayList<>();
     }
 
@@ -45,7 +46,6 @@ public class ChooseImageScreen extends Screen {
     protected void init() {
         super.init();
 
-        cancelButton.setWidth(50);
         cancelButton.setX(client.getWindow().getScaledWidth() - cancelButton.getWidth());
         addDrawableChild(cancelButton);
 
@@ -55,13 +55,17 @@ public class ChooseImageScreen extends Screen {
             Path localResourcePath = Path.of(localResource);
             Files.list(localResourcePath).forEach(filePath -> {
                 String fileName = filePath.getFileName().toString();
+                String fileNameNoExtension = FilenameUtils.removeExtension(fileName);
                 Identifier textureID = new Identifier("splashfox", "textures/gui/" + fileName);
                 MinecraftClient.getInstance().getTextureManager().getTexture(textureID).bindTexture();
-                SelectFoxButton selectFoxButton = new SelectFoxButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, selectedPath.equals(textureID), textureID, e -> {
+
+                ChooseButton chooseButton = new ChooseButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, selectedPath.equals(textureID), textureID, e -> {
                     selectedPath = textureID;
                     close();
-                }, Text.literal(filePath.getFileName().toString()));
-                iconButtons.add(selectFoxButton);
+                }, Text.literal(fileNameNoExtension));
+
+                chooseButton.setTooltip(Tooltip.of(Text.literal(fileNameNoExtension)));
+                iconButtons.add(chooseButton);
             });
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -72,15 +76,15 @@ public class ChooseImageScreen extends Screen {
         int x = 0;
         int y = 0;
 
-        for (SelectFoxButton button : iconButtons) {
+        for (ChooseButton button : iconButtons) {
             int nextX = x + button.getWidth();
             if (nextX > fullScreenWidth) {
                 x = 0;
-                y += button.getHeight() + PADDING;
+                y += button.getHeight() + BUTTON_Y_MARGIN;
             }
             button.setX(startX + x);
             button.setY(y);
-            x += button.getWidth() + PADDING;
+            x += button.getWidth() + BUTTON_Y_MARGIN;
             addDrawableChild(button);
         }
 
@@ -88,7 +92,7 @@ public class ChooseImageScreen extends Screen {
     }
 
     private void positionButtonOffset(double offset) {
-        for(SelectFoxButton button : iconButtons) {
+        for(ChooseButton button : iconButtons) {
             button.setYOffset((int)-offset);
         }
     }
@@ -100,19 +104,30 @@ public class ChooseImageScreen extends Screen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double scrollAmount) {
-        scrollButtonWidgets(scrollAmount);
+        scrollRelative(scrollAmount);
         return super.mouseScrolled(mouseX, mouseY, horizontalAmount, scrollAmount);
     }
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if(keyCode == GLFW.GLFW_KEY_DOWN) {
-            scrollButtonWidgets(-8);
+        // Handle the key press first, so the new element that get selected is reflected before we do our check
+        boolean bl = super.keyPressed(keyCode, scanCode, modifiers);
+
+        for(ChooseButton chooseButton : iconButtons) {
+            if(chooseButton.isSelected()) {
+                int highestY = chooseButton.getY() - ChooseButton.PADDING;
+                int lowestY = chooseButton.getY() + chooseButton.getHeight() + ChooseButton.PADDING;
+                if(lowestY > height + scrolledOffset) {
+                    setScrollOffset(lowestY - (height - scrolledOffset));
+                }
+
+                if(highestY < 0) {
+                    scrollRelative(-highestY);
+                }
+            }
         }
-        if(keyCode == GLFW.GLFW_KEY_UP) {
-            scrollButtonWidgets(8);
-        }
-        return super.keyPressed(keyCode, scanCode, modifiers);
+
+        return bl;
     }
 
     @Override
@@ -121,8 +136,12 @@ public class ChooseImageScreen extends Screen {
         callback.accept(selectedPath);
     }
 
-    private void scrollButtonWidgets(double amount) {
-        scrolledOffset = Math.min(Math.max(0, scrolledOffset - (amount * scrollMultiplier)), totalHeight - height);
-        positionButtonOffset(scrolledOffset);
+    private void scrollRelative(double amount) {
+        setScrollOffset(Math.min(scrolledOffset - (amount * SCROLL_MULTIPLIER), totalHeight - height));
+    }
+
+    private void setScrollOffset(double scrollOffset) {
+        this.scrolledOffset = Math.max(0, scrollOffset);
+        positionButtonOffset(this.scrolledOffset);
     }
 }
