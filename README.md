@@ -1,12 +1,8 @@
 # SplashFox
-A mod that displays a bouncy blobfox on Minecraft loading screen, because why not.  
-
-**This mod only officially works on >= 1.19.3**.  
-With that being said, it's just a simple mixin and will work on versions >= 1.17.  
-Just note that the Config GUI won't work and I won't provide explicit support for it.
+A mod that displays a bouncy blobfox on Minecraft loading screen, because yes.  
 
 ## Config
-A GUI configuration screen is available on 1.19 by installing Mod Menu.  
+A GUI configuration screen is available on 1.19.3 and above by installing Mod Menu.  
 You may also modify the config file manually under `Your_Game_Instances/config/splashfox/config.json` in circumstances where the Config GUI does not work.  
 Configurable item as follows:  
 
@@ -20,9 +16,9 @@ Configurable item as follows:
 | Image Path  | The Minecraft id reference to the image file                       | splashfox:textures/gui/ blobfox.png | string                                                                                      |
 | Position    | Position of where the fox should be placed                         | ABOVE_MOJANG                        | Position:   LEFT_TO_MOJANG   RIGHT_TO_MOJANG   ABOVE_MOJANG   REPLACE_MOJANG   FOLLOW_MOUSE |
 
-## Setup
-For setup instructions please see the [fabric wiki page](https://fabricmc.net/wiki/tutorial:setup) that relates to the IDE that you are using.
+## Bugs/Suggestions
+If you have any suggestions or bug report, don't hesitate to open an GitHub issue [here](https://github.com/Kenny-Hui/Splashfox/issues)!
 
 ## License
-The blobfox emoji are licensed under Apache 2.0.  
+The blobfox emojis are licensed under Apache 2.0.  
 This project is licensed under the MIT License.
