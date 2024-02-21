@@ -1,0 +1,21 @@
+{
+  "splashfox.gui.blobfox_size": "Blobfox 尺寸",
+  "splashfox.gui.cancel": "取消",
+  "splashfox.gui.choose": "选择…",
+  "splashfox.gui.choose_img": "选择图像",
+  "splashfox.gui.config_title": "狐狸加载界面（SplashFox）配置",
+  "splashfox.gui.drop_height": "下落高度",
+  "splashfox.gui.discard_config": "放弃配置",
+  "splashfox.gui.flipped": "翻转",
+  "splashfox.gui.position": "位置",
+  "splashfox.gui.position.FOLLOW_MOUSE": "跟随鼠标",
+  "splashfox.gui.position.LEFT_TO_MOJANG": "Mojang 图标左侧",
+  "splashfox.gui.position.RIGHT_TO_MOJANG": "Mojang 图标右侧",
+  "splashfox.gui.position.ABOVE_MOJANG": "Mojang 图标顶部",
+  "splashfox.gui.position.REPLACE_MOJANG": "替换 Mojang 图标",
+  "splashfox.gui.speed": "速度",
+  "splashfox.gui.save_config": "保存配置",
+  "splashfox.gui.wobbly": "摇晃",
+
+  "modmenu.descriptionTranslation.splashfox": "在加载屏幕上添加了一个活蹦乱跳的 Blobfox。"
+}
