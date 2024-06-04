@@ -19,7 +19,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SplashOverlay.class)
 public class SplashOverlayMixin {
-	private static final Identifier EMPTY_LOGO = new Identifier("splashfox", "textures/empty.png");
+	private static final Identifier EMPTY_LOGO = Identifier.of("splashfox", "textures/empty.png");
 	@Shadow private long reloadCompleteTime;
 	@Shadow private long reloadStartTime;
 	@Shadow @Final private boolean reloading;

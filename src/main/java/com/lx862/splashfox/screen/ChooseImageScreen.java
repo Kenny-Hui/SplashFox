@@ -56,7 +56,7 @@ public class ChooseImageScreen extends Screen {
             Files.list(localResourcePath).forEach(filePath -> {
                 String fileName = filePath.getFileName().toString();
                 String fileNameNoExtension = FilenameUtils.removeExtension(fileName);
-                Identifier textureID = new Identifier("splashfox", "textures/gui/" + fileName);
+                Identifier textureID = Identifier.of("splashfox", "textures/gui/" + fileName);
                 MinecraftClient.getInstance().getTextureManager().getTexture(textureID).bindTexture();
 
                 ChooseButton chooseButton = new ChooseButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, selectedPath.equals(textureID), textureID, e -> {

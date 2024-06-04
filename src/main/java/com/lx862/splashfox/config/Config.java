@@ -42,7 +42,7 @@ public class Config {
     }
 
     public Identifier getFoxImageId() {
-        return new Identifier(imagePath);
+        return Identifier.of(imagePath);
     }
 
     public static void writeConfig(Config instance) {

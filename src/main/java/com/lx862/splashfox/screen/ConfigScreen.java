@@ -7,7 +7,6 @@ import com.lx862.splashfox.SplashFox;
 import com.lx862.splashfox.render.FoxRenderer;
 import com.lx862.splashfox.screen.widget.Slider;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
