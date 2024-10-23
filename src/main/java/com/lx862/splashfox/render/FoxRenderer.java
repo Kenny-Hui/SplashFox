@@ -5,6 +5,7 @@ import com.lx862.splashfox.data.FoxPosition;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -77,8 +78,7 @@ public class FoxRenderer {
 
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, alpha);
-        drawContext.drawTexture(foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)size, (int)size);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)size, (int)size, 0xFFFFFF | ((int)(alpha * 255)) << 24);
         RenderSystem.disableBlend();
         RenderSystem.enableCull();
         matrices.pop();

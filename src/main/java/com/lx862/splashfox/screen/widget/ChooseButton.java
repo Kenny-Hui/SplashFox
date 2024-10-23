@@ -4,6 +4,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.render.GameRenderer;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -35,7 +36,7 @@ public class ChooseButton extends ButtonWidget {
             // Selected
             drawContext.drawBorder(startX, startY, sizeWidth, sizeHeight, 0xAAFFFFFF);
         }
-        drawContext.drawTexture(buttonTexture, this.getX(), this.getY(), 0, 0, this.width, this.height, this.width, this.height);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, buttonTexture, this.getX(), this.getY(), 0, 0, this.width, this.height, this.width, this.height);
     }
 
     @Override
