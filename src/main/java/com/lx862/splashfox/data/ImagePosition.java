@@ -1,6 +1,6 @@
 package com.lx862.splashfox.data;
 
-public enum FoxPosition {
+public enum ImagePosition {
     LEFT_TO_MOJANG(false),
     RIGHT_TO_MOJANG(false),
     ABOVE_MOJANG(false),
@@ -9,7 +9,7 @@ public enum FoxPosition {
 
     public final boolean mojangLogoHidden;
 
-    FoxPosition(boolean hideMojangLogo) {
+    ImagePosition(boolean hideMojangLogo) {
         this.mojangLogoHidden = hideMojangLogo;
     }
 }

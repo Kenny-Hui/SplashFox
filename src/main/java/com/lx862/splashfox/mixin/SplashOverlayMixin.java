@@ -1,8 +1,9 @@
 package com.lx862.splashfox.mixin;
 
 import com.lx862.splashfox.config.Config;
-import com.lx862.splashfox.data.CustomResourceTexture;
+import com.lx862.splashfox.data.BuiltinResourceTexture;
 import com.lx862.splashfox.SplashFox;
+import com.lx862.splashfox.data.CustomResourceTexture;
 import com.lx862.splashfox.render.FoxRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -13,28 +14,33 @@ import net.minecraft.util.math.MathHelper;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(SplashOverlay.class)
 public class SplashOverlayMixin {
-	private static final Identifier EMPTY_LOGO = Identifier.of("splashfox", "textures/empty.png");
+	@Unique private static final Identifier EMPTY_LOGO = Identifier.of("splashfox", "textures/empty.png");
 	@Shadow private long reloadCompleteTime;
 	@Shadow private long reloadStartTime;
 	@Shadow @Final private boolean reloading;
 	@Shadow @Final private MinecraftClient client;
-	@Shadow @Final
-	static Identifier LOGO;
-	private double elapsed;
-	private FoxRenderer renderer;
+	@Shadow @Final public static Identifier LOGO;
+	@Unique private double elapsed;
+	@Unique private FoxRenderer renderer;
 
 	@Inject(at = @At("HEAD"), method = "init", cancellable = true)
 	private static void init(MinecraftClient client, CallbackInfo ci) {
-		client.getTextureManager().registerTexture(SplashFox.config.getFoxImageId(), new CustomResourceTexture(SplashFox.config.getFoxImageId()));
+		Identifier imageId = SplashFox.config.getImageIdentifier();
+		if(SplashFox.config.usesCustomImage()) {
+			client.getTextureManager().registerTexture(imageId, new CustomResourceTexture(SplashFox.config.customPath, imageId));
+		} else {
+			client.getTextureManager().registerTexture(imageId, new BuiltinResourceTexture(imageId));
+		}
 
 		if(SplashFox.config.position.mojangLogoHidden) {
-			client.getTextureManager().registerTexture(LOGO, new CustomResourceTexture(EMPTY_LOGO));
+			client.getTextureManager().registerTexture(LOGO, new BuiltinResourceTexture(EMPTY_LOGO));
 			ci.cancel();
 		}
 	}

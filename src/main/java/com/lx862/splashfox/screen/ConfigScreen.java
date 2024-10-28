@@ -1,7 +1,7 @@
 package com.lx862.splashfox.screen;
 
 import com.lx862.splashfox.config.Config;
-import com.lx862.splashfox.data.FoxPosition;
+import com.lx862.splashfox.data.ImagePosition;
 import com.lx862.splashfox.data.ScreenAlignment;
 import com.lx862.splashfox.SplashFox;
 import com.lx862.splashfox.render.FoxRenderer;
@@ -50,7 +50,7 @@ public class ConfigScreen extends Screen {
         curY += 40;
 
         chooseImageButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.choose"), (d) -> {
-            Identifier currentImageId = sessionInstance.getFoxImageId();
+            Identifier currentImageId = sessionInstance.getImageIdentifier();
             ChooseImageScreen chooseImageScreen = new ChooseImageScreen(this, currentImageId, (id) -> {
                 sessionInstance.imagePath = id.toString();
             });
@@ -108,7 +108,7 @@ public class ConfigScreen extends Screen {
 
         positionButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.position." + sessionInstance.position.toString()), (d) -> {
             int index = sessionInstance.position.ordinal();
-            sessionInstance.position = FoxPosition.values()[(index + 1) % FoxPosition.values().length];
+            sessionInstance.position = ImagePosition.values()[(index + 1) % ImagePosition.values().length];
             d.setMessage(Text.translatable("splashfox.gui.position." + sessionInstance.position.toString()));
         }).build();
 
