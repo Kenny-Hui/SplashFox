@@ -15,7 +15,6 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextWidget;
 import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
 
 import java.util.ArrayList;
@@ -34,7 +33,7 @@ public class ConfigScreen extends Screen {
     private final List<Pair<String, Integer>> labels;
     private static final int SCREEN_WIDTH = 320;
     private double elapsed;
-    private final Config sessionInstance;
+    private final Config tmpConfigInstance;
     private final FoxRenderer foxRenderer;
     private final Screen parentScreen;
 
@@ -42,18 +41,14 @@ public class ConfigScreen extends Screen {
         super(Text.translatable("splashfox.gui.config_title"));
         this.parentScreen = parent;
         // Make another instance of config so changes only apply if the user click save
-        sessionInstance = Config.readConfig();
+        tmpConfigInstance = Config.readConfig();
         foxRenderer = new FoxRenderer();
         labels = new ArrayList<>();
 
         int curY = 40;
 
         chooseImageButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.choose"), (d) -> {
-            Identifier currentImageId = sessionInstance.getBuiltinImageIdentifier();
-            ChooseImageScreen chooseImageScreen = new ChooseImageScreen(this, currentImageId, (id) -> {
-                sessionInstance.imagePath = id.toString();
-            });
-
+            ChooseImageScreen chooseImageScreen = new ChooseImageScreen(this, tmpConfigInstance);
             client.setScreen(chooseImageScreen);
         }).build();
         chooseImageButton.setY(curY);
@@ -61,54 +56,54 @@ public class ConfigScreen extends Screen {
 
         curY += 20;
 
-        speedSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(sessionInstance.speed)), sessionInstance.speed, 2, (slider) -> {
+        speedSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(tmpConfigInstance.speed)), tmpConfigInstance.speed, 2, (slider) -> {
             double val = slider.getValue();
-            sessionInstance.speed = val;
+            tmpConfigInstance.speed = val;
         });
         labels.add(new Pair<>("splashfox.gui.speed", curY));
 
         curY += 20;
 
-        dropHeightSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(sessionInstance.dropHeight)), sessionInstance.dropHeight, 3, (slider) -> {
+        dropHeightSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(tmpConfigInstance.dropHeight)), tmpConfigInstance.dropHeight, 3, (slider) -> {
             double val = slider.getValue();
-            sessionInstance.dropHeight = val;
+            tmpConfigInstance.dropHeight = val;
         });
         labels.add(new Pair<>("splashfox.gui.drop_height", curY));
 
         curY += 20;
 
-        foxSizeSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(sessionInstance.foxSize)), sessionInstance.foxSize, 2, (slider) -> {
+        foxSizeSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(tmpConfigInstance.foxSize)), tmpConfigInstance.foxSize, 2, (slider) -> {
             double val = slider.getValue();
-            sessionInstance.foxSize = val;
+            tmpConfigInstance.foxSize = val;
         });
         labels.add(new Pair<>("splashfox.gui.blobfox_size", curY));
 
         curY += 20;
 
         flippedCheckbox = CheckboxWidget.builder(Text.literal(""), MinecraftClient.getInstance().textRenderer)
-                .checked(sessionInstance.flipped)
+                .checked(tmpConfigInstance.flipped)
                 .pos(0, curY)
                 .callback((btn, checked) -> {
-                    sessionInstance.flipped = checked;
+                    tmpConfigInstance.flipped = checked;
                 }).build();
         labels.add(new Pair<>("splashfox.gui.flipped", curY));
 
         curY += 20;
 
         wobblyCheckbox = CheckboxWidget.builder(Text.literal(""), MinecraftClient.getInstance().textRenderer)
-                .checked(sessionInstance.wobbly)
+                .checked(tmpConfigInstance.wobbly)
                 .pos(0, curY)
                 .callback((btn, checked) -> {
-                    sessionInstance.wobbly = checked;
+                    tmpConfigInstance.wobbly = checked;
                 }).build();
         labels.add(new Pair<>("splashfox.gui.wobbly", curY));
 
         curY += 20;
 
-        positionButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.position." + sessionInstance.position.toString()), (d) -> {
-            int index = sessionInstance.position.ordinal();
-            sessionInstance.position = ImagePosition.values()[(index + 1) % ImagePosition.values().length];
-            d.setMessage(Text.translatable("splashfox.gui.position." + sessionInstance.position.toString()));
+        positionButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.position." + tmpConfigInstance.position.toString()), (d) -> {
+            int index = tmpConfigInstance.position.ordinal();
+            tmpConfigInstance.position = ImagePosition.values()[(index + 1) % ImagePosition.values().length];
+            d.setMessage(Text.translatable("splashfox.gui.position." + tmpConfigInstance.position.toString()));
         }).build();
 
         positionButton.setY(curY);
@@ -122,7 +117,7 @@ public class ConfigScreen extends Screen {
 
         saveButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.save_config"), (d) -> {
             Config.needUpdateTexture = true;
-            Config.writeConfig(sessionInstance);
+            Config.writeConfig(tmpConfigInstance);
             SplashFox.config = Config.readConfig();
             close();
         }).build();
@@ -178,7 +173,7 @@ public class ConfigScreen extends Screen {
 
         // Render fox preview :D
         try {
-            foxRenderer.render(client, drawContext, null, sessionInstance, mouseX, mouseY, elapsed, 1.0f);
+            foxRenderer.render(client, drawContext, null, tmpConfigInstance, mouseX, mouseY, elapsed, 1.0f);
         } catch (Exception e) {
             e.printStackTrace();
         }
