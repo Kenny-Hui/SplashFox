@@ -80,7 +80,11 @@ public class ChooseImageWidget extends ClickableWidget {
         String fileName = filePath.getFileName().toString();
         String fileNameNoExtension = FilenameUtils.removeExtension(fileName);
         Identifier id = custom ? sessionInstance.getCustomImageIdentifier(fileName) : Identifier.of("splashfox", "textures/gui/" + fileName);
-        MinecraftClient.getInstance().getTextureManager().getTexture(id).bindTexture();
+        if(!custom) {
+            MinecraftClient.getInstance().getTextureManager().getTexture(id).bindTexture();
+        } else {
+            MinecraftClient.getInstance().getTextureManager().registerTexture(id, new CustomResourceTexture(fileName, id));
+        }
 
         ChooseButton chooseButton = new ChooseButton(0, 0, BUTTON_SIZE, BUTTON_SIZE, initialSelection.equals(custom ? fileName : id.toString()), id, e -> {
             sessionInstance.imagePath = custom ? null : id.toString();
