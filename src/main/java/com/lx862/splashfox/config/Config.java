@@ -48,8 +48,12 @@ public class Config {
         return customPath != null;
     }
 
+    public Identifier getBuiltinImageIdentifier() {
+        return Identifier.of(imagePath);
+    }
+
     public Identifier getImageIdentifier() {
-        return usesCustomImage() ? getCustomImageIdentifier(customPath) : Identifier.of(imagePath);
+        return usesCustomImage() ? getCustomImageIdentifier(customPath) : getBuiltinImageIdentifier();
     }
 
     public Identifier getCustomImageIdentifier(String customPath) {

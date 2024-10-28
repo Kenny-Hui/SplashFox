@@ -49,7 +49,7 @@ public class ConfigScreen extends Screen {
         int curY = 40;
 
         chooseImageButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.choose"), (d) -> {
-            Identifier currentImageId = sessionInstance.getImageIdentifier();
+            Identifier currentImageId = sessionInstance.getBuiltinImageIdentifier();
             ChooseImageScreen chooseImageScreen = new ChooseImageScreen(this, currentImageId, (id) -> {
                 sessionInstance.imagePath = id.toString();
             });
