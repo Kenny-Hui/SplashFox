@@ -13,6 +13,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.CheckboxWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Pair;
@@ -35,19 +36,17 @@ public class ConfigScreen extends Screen {
     private double elapsed;
     private final Config sessionInstance;
     private final FoxRenderer foxRenderer;
+    private final Screen parentScreen;
 
-    public ConfigScreen() {
+    public ConfigScreen(Screen parent) {
         super(Text.translatable("splashfox.gui.config_title"));
+        this.parentScreen = parent;
         // Make another instance of config so changes only apply if the user click save
         sessionInstance = Config.readConfig();
         foxRenderer = new FoxRenderer();
         labels = new ArrayList<>();
 
-        int curY = 0;
-
-        labels.add(new Pair<>("splashfox.gui.config_title", curY));
-
-        curY += 40;
+        int curY = 40;
 
         chooseImageButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.choose"), (d) -> {
             Identifier currentImageId = sessionInstance.getImageIdentifier();
@@ -147,11 +146,11 @@ public class ConfigScreen extends Screen {
 
         discardButton.setWidth(SCREEN_WIDTH / 2);
         discardButton.setX(getX(saveButton, ScreenAlignment.LEFT));
-        discardButton.setY(client.getWindow().getScaledHeight() - saveButton.getHeight());
+        discardButton.setY(client.getWindow().getScaledHeight() - saveButton.getHeight() - 10);
 
         saveButton.setWidth(SCREEN_WIDTH / 2);
         saveButton.setX(getX(saveButton, ScreenAlignment.RIGHT));
-        saveButton.setY(client.getWindow().getScaledHeight() - saveButton.getHeight());
+        saveButton.setY(client.getWindow().getScaledHeight() - saveButton.getHeight() - 10);
 
         addDrawableChild(chooseImageButton);
         addDrawableChild(speedSlider);
@@ -183,11 +182,15 @@ public class ConfigScreen extends Screen {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        drawContext.drawCenteredTextWithShadow(textRenderer, title, this.width / 2, 12, 0xFFFFFF);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, Screen.HEADER_SEPARATOR_TEXTURE, 0, 30, 0.0F, 0.0F, this.width, 2, 32, 2);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, Screen.FOOTER_SEPARATOR_TEXTURE, 0, this.height - 40, 0.0F, 0.0F, this.width, 2, 32, 2);
     }
 
     @Override
     public void close() {
-        super.close();
+        this.client.setScreen(parentScreen);
     }
 
     private int getX(int width, ScreenAlignment type) {

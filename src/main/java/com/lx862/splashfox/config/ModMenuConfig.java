@@ -7,6 +7,6 @@ import com.lx862.splashfox.screen.ConfigScreen;
 public class ModMenuConfig implements ModMenuApi {
     @Override
     public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        return parent -> new ConfigScreen();
+        return ConfigScreen::new;
     }
 }
