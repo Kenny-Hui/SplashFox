@@ -20,7 +20,7 @@ public class CustomResourceTexture extends ResourceTexture {
     }
 
     protected TextureData loadTextureData(ResourceManager resourceManager) {
-        try (InputStream input = Files.newInputStream(Config.CUSTOM_IMG_PATH.resolve(relativePath))) {
+        try(InputStream input = Files.newInputStream(Config.CUSTOM_IMG_PATH.resolve(relativePath))) {
             return new TextureData(new TextureResourceMetadata(true, true), NativeImage.read(input));
         } catch (IOException exception) {
             return new TextureData(exception);
