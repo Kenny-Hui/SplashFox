@@ -6,10 +6,20 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
+import net.minecraft.client.render.RenderPhase;
+import net.minecraft.client.render.VertexFormat;
+import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.TriState;
+import net.minecraft.util.Util;
+
+import java.util.function.Function;
+
+import static net.minecraft.client.render.RenderPhase.*;
 
 public class FoxRenderer {
+    public static final Function<Identifier, RenderLayer> SplashFoxRenderLayer = Util.memoize((texture) -> RenderLayer.of("splashfox_gui_textured", VertexFormats.POSITION_TEXTURE_COLOR, VertexFormat.DrawMode.QUADS, 786432, RenderLayer.MultiPhaseParameters.builder().texture(new Texture(texture, TriState.FALSE, false)).program(POSITION_TEXTURE_COLOR_PROGRAM).transparency(TRANSLUCENT_TRANSPARENCY).depthTest(LEQUAL_DEPTH_TEST).cull(DISABLE_CULLING).build(false)));
     private double shiftY = 0;
     private double animationProgress = 0;
     public void render(MinecraftClient client, DrawContext drawContext, ImagePosition imagePosition, Config config, int mouseX, int mouseY, double elapsed, float alpha) {
@@ -78,7 +88,7 @@ public class FoxRenderer {
 
         RenderSystem.enableBlend();
         RenderSystem.disableCull();
-        drawContext.drawTexture(RenderLayer::getGuiTextured, foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)size, (int)size, 0xFFFFFF | ((int)(alpha * 255)) << 24);
+        drawContext.drawTexture(SplashFoxRenderLayer, foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)size, (int)size, 0xFFFFFF | ((int)(alpha * 255)) << 24);
         RenderSystem.disableBlend();
         RenderSystem.enableCull();
         matrices.pop();
