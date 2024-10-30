@@ -14,7 +14,7 @@ public class ChooseImageScreen extends Screen {
     private final ChooseImageWidget chooseImageWidget;
 
     public ChooseImageScreen(Screen parentScreen, Config configInstance) {
-        super(Text.literal("Choose an image"));
+        super(Text.translatable("splashfox.gui.choose_img"));
         this.parentScreen = parentScreen;
         doneButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.done"), (btn) -> {
             close();
