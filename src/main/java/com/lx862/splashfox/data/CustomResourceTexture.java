@@ -4,6 +4,7 @@ import com.lx862.splashfox.config.Config;
 import net.minecraft.client.resource.metadata.TextureResourceMetadata;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.ResourceTexture;
+import net.minecraft.client.texture.TextureContents;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.util.Identifier;
 
@@ -19,11 +20,12 @@ public class CustomResourceTexture extends ResourceTexture {
         this.relativePath = relativePath;
     }
 
-    protected TextureData loadTextureData(ResourceManager resourceManager) {
+    @Override
+    public TextureContents loadContents(ResourceManager resourceManager) {
         try(InputStream input = Files.newInputStream(Config.CUSTOM_IMG_PATH.resolve(relativePath))) {
-            return new TextureData(new TextureResourceMetadata(true, true), NativeImage.read(input));
+            return new TextureContents(NativeImage.read(input), new TextureResourceMetadata(true, true));
         } catch (IOException exception) {
-            return new TextureData(exception);
+            return TextureContents.createMissing();
         }
     }
 }

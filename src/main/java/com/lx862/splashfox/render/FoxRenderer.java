@@ -2,11 +2,9 @@ package com.lx862.splashfox.render;
 
 import com.lx862.splashfox.config.Config;
 import com.lx862.splashfox.data.ImagePosition;
-import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.RenderLayer;
-import net.minecraft.client.render.RenderPhase;
 import net.minecraft.client.render.VertexFormat;
 import net.minecraft.client.render.VertexFormats;
 import net.minecraft.client.util.math.MatrixStack;
@@ -22,10 +20,11 @@ public class FoxRenderer {
     public static final Function<Identifier, RenderLayer> SplashFoxRenderLayer = Util.memoize((texture) -> RenderLayer.of("splashfox_gui_textured", VertexFormats.POSITION_TEXTURE_COLOR, VertexFormat.DrawMode.QUADS, 786432, RenderLayer.MultiPhaseParameters.builder().texture(new Texture(texture, TriState.FALSE, false)).program(POSITION_TEXTURE_COLOR_PROGRAM).transparency(TRANSLUCENT_TRANSPARENCY).depthTest(LEQUAL_DEPTH_TEST).cull(DISABLE_CULLING).build(false)));
     private double shiftY = 0;
     private double animationProgress = 0;
+
     public void render(MinecraftClient client, DrawContext drawContext, ImagePosition imagePosition, Config config, int mouseX, int mouseY, double elapsed, float alpha) {
         MatrixStack matrices = drawContext.getMatrices();
-        double d = Math.min((double)client.getWindow().getScaledWidth() * 0.75, client.getWindow().getScaledHeight()) * 0.25;
-        int splashScreenScale = (int)(d * 0.5);
+        double scaleBasis = Math.min((double)client.getWindow().getScaledWidth() * 0.75, client.getWindow().getScaledHeight()) * 0.25;
+        int splashScreenScale = (int)(scaleBasis * 0.5);
 
         double size = config.foxSize * splashScreenScale;
         double dropHeight = config.dropHeight * splashScreenScale;
@@ -34,40 +33,40 @@ public class FoxRenderer {
         boolean flipped = config.flipped;
         Identifier foxImage = config.getImageIdentifier();
 
-        double centeredScreenWidth = (client.getWindow().getScaledWidth() / 2.0) - (size / 2);
-        double centeredScreenHeight = (client.getWindow().getScaledHeight() / 2.0) - dropHeight;
-        double x = centeredScreenWidth;
-        double y = shiftY;
+        final double centeredScreenWidth = (client.getWindow().getScaledWidth() / 2.0) - (size / 2);
+        final double centeredScreenHeight = (client.getWindow().getScaledHeight() / 2.0) - dropHeight;
+        final double x;
+        final double y;
 
-        if(imagePosition == ImagePosition.LEFT_TO_MOJANG) {
-            x = centeredScreenWidth - (6 * splashScreenScale);
-            y = centeredScreenHeight + shiftY;
-        }
-
-        if(imagePosition == ImagePosition.RIGHT_TO_MOJANG) {
-            x = centeredScreenWidth + (6 * splashScreenScale);
-            y = centeredScreenHeight + shiftY;
-        }
-
-        if(imagePosition == ImagePosition.ABOVE_MOJANG) {
-            x = centeredScreenWidth;
-            y = centeredScreenHeight - (splashScreenScale) - size + shiftY;
-        }
-
-        if(imagePosition == ImagePosition.REPLACE_MOJANG) {
-            x = centeredScreenWidth;
-            y = centeredScreenHeight + shiftY;
-        }
-
-        if(imagePosition == ImagePosition.FOLLOW_MOUSE) {
-            x = mouseX;
-            y = mouseY + shiftY;
-        }
-
-        // Preview mode
-        if(imagePosition == null) {
-            x = client.getWindow().getScaledHeight() > 450 ? centeredScreenWidth : (flipped ? 0 : client.getWindow().getScaledWidth() - size);
-            y = centeredScreenHeight + shiftY;
+        switch(imagePosition) {
+            case LEFT_TO_MOJANG -> {
+                x = centeredScreenWidth - (6 * splashScreenScale);
+                y = centeredScreenHeight + shiftY;
+            }
+            case RIGHT_TO_MOJANG -> {
+                x = centeredScreenWidth + (6 * splashScreenScale);
+                y = centeredScreenHeight + shiftY;
+            }
+            case ABOVE_MOJANG -> {
+                x = centeredScreenWidth;
+                y = centeredScreenHeight - (splashScreenScale) - size + shiftY;
+            }
+            case REPLACE_MOJANG -> {
+                x = centeredScreenWidth;
+                y = centeredScreenHeight + shiftY;
+            }
+            case FOLLOW_MOUSE -> {
+                x = mouseX;
+                y = mouseY + shiftY;
+            }
+            case GUI_PREVIEW -> {
+                x = client.getWindow().getScaledHeight() > 450 ? centeredScreenWidth : (flipped ? 0 : client.getWindow().getScaledWidth() - size);
+                y = centeredScreenHeight + shiftY;
+            }
+            default -> {
+                x = centeredScreenWidth;
+                y = shiftY;
+            }
         }
 
         matrices.push();
@@ -86,11 +85,7 @@ public class FoxRenderer {
             matrices.translate(-(size / 2.0), -size, 0);
         }
 
-        RenderSystem.enableBlend();
-        RenderSystem.disableCull();
         drawContext.drawTexture(SplashFoxRenderLayer, foxImage, 0, 0, 0, 0, (int)size, (int)size, (int)size, (int)size, 0xFFFFFF | ((int)(alpha * 255)) << 24);
-        RenderSystem.disableBlend();
-        RenderSystem.enableCull();
         matrices.pop();
 
         animationProgress = getBounceProgress(speedFactor, elapsed / 10, wobbly);

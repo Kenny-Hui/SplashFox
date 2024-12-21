@@ -6,8 +6,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class SplashFox implements ClientModInitializer {
+	public static final Logger LOGGER = LoggerFactory.getLogger("SplashFox");
 	public static Config config;
-	public static final Logger LOGGER = LoggerFactory.getLogger("splashfox");
 
 	@Override
 	public void onInitializeClient() {

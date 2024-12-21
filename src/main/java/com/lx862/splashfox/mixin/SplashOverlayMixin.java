@@ -8,6 +8,7 @@ import com.lx862.splashfox.render.FoxRenderer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.SplashOverlay;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
@@ -22,25 +23,25 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(SplashOverlay.class)
 public class SplashOverlayMixin {
 	@Unique private static final Identifier EMPTY_LOGO = Identifier.of("splashfox", "textures/empty.png");
-	@Shadow private long reloadCompleteTime;
-	@Shadow private long reloadStartTime;
 	@Shadow @Final private boolean reloading;
 	@Shadow @Final private MinecraftClient client;
 	@Shadow @Final public static Identifier LOGO;
+	@Shadow private long reloadCompleteTime;
+	@Shadow private long reloadStartTime;
 	@Unique private double elapsed;
 	@Unique private FoxRenderer renderer;
 
 	@Inject(at = @At("HEAD"), method = "init", cancellable = true)
-	private static void init(MinecraftClient client, CallbackInfo ci) {
+	private static void init(TextureManager textureManager, CallbackInfo ci) {
 		Identifier imageId = SplashFox.config.getImageIdentifier();
 		if(SplashFox.config.usesCustomImage()) {
-			client.getTextureManager().registerTexture(imageId, new CustomResourceTexture(SplashFox.config.customPath, imageId));
+			textureManager.registerTexture(imageId, new CustomResourceTexture(SplashFox.config.customPath, imageId));
 		} else {
-			client.getTextureManager().registerTexture(imageId, new BuiltinResourceTexture(imageId));
+			textureManager.registerTexture(imageId, new BuiltinResourceTexture(imageId));
 		}
 
 		if(SplashFox.config.position.mojangLogoHidden) {
-			client.getTextureManager().registerTexture(LOGO, new BuiltinResourceTexture(EMPTY_LOGO));
+			textureManager.registerTexture(LOGO, new BuiltinResourceTexture(EMPTY_LOGO));
 			ci.cancel();
 		}
 	}
@@ -55,13 +56,15 @@ public class SplashOverlayMixin {
 	}
 
 	// The init method is only called once on startup, call init again if any settings is mismatched
+	@Unique
 	private void ensureTextureRegistered() {
 		if(Config.needUpdateTexture) {
-			SplashOverlay.init(client);
+			SplashOverlay.init(this.client.getTextureManager());
 			Config.needUpdateTexture = false;
 		}
 	}
 
+	@Unique
 	private float getOverlayAlpha() {
 		long l = Util.getMeasuringTimeMs();
 		float f = this.reloadCompleteTime > -1L ? (float)(l - this.reloadCompleteTime) / 1000.0F : -1.0F;

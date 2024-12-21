@@ -18,6 +18,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Pair;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class ConfigScreen extends Screen {
@@ -57,8 +58,7 @@ public class ConfigScreen extends Screen {
         curY += 20;
 
         speedSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(tmpConfigInstance.speed)), tmpConfigInstance.speed, 2, (slider) -> {
-            double val = slider.getValue();
-            tmpConfigInstance.speed = val;
+            tmpConfigInstance.speed = slider.getValue();
         });
         labels.add(new Pair<>("splashfox.gui.speed", curY));
 
@@ -73,8 +73,7 @@ public class ConfigScreen extends Screen {
         curY += 20;
 
         foxSizeSlider = new Slider(0, curY, 100, 20, Text.literal(String.valueOf(tmpConfigInstance.foxSize)), tmpConfigInstance.foxSize, 2, (slider) -> {
-            double val = slider.getValue();
-            tmpConfigInstance.foxSize = val;
+            tmpConfigInstance.foxSize = slider.getValue();
         });
         labels.add(new Pair<>("splashfox.gui.blobfox_size", curY));
 
@@ -102,7 +101,8 @@ public class ConfigScreen extends Screen {
 
         positionButton = new ButtonWidget.Builder(Text.translatable("splashfox.gui.position." + tmpConfigInstance.position.toString()), (d) -> {
             int index = tmpConfigInstance.position.ordinal();
-            tmpConfigInstance.position = ImagePosition.values()[(index + 1) % ImagePosition.values().length];
+            ImagePosition[] imagePositions = Arrays.stream(ImagePosition.values()).filter(e -> e.selectable).toArray(ImagePosition[]::new);
+            tmpConfigInstance.position = imagePositions[(index + 1) % imagePositions.length];
             d.setMessage(Text.translatable("splashfox.gui.position." + tmpConfigInstance.position.toString()));
         }).build();
 
@@ -172,11 +172,7 @@ public class ConfigScreen extends Screen {
         elapsed += delta;
 
         // Render fox preview :D
-        try {
-            foxRenderer.render(client, drawContext, null, tmpConfigInstance, mouseX, mouseY, elapsed, 1.0f);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        foxRenderer.render(client, drawContext, ImagePosition.GUI_PREVIEW, tmpConfigInstance, mouseX, mouseY, elapsed, 1.0f);
 
         drawContext.drawCenteredTextWithShadow(textRenderer, title, this.width / 2, 12, 0xFFFFFF);
         drawContext.drawTexture(RenderLayer::getGuiTextured, Screen.HEADER_SEPARATOR_TEXTURE, 0, 30, 0.0F, 0.0F, this.width, 2, 32, 2);

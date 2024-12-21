@@ -29,11 +29,11 @@ public class ChooseImageScreen extends Screen {
         doneButton.setX((client.getWindow().getScaledWidth() / 2) - (doneButton.getWidth() / 2));
         doneButton.setY(client.getWindow().getScaledHeight() - 30);
 
-        int fw = (int)(client.getWindow().getScaledWidth() * CHOOSER_WIDTH_FACTOR);
-        int startX = (client.getWindow().getScaledWidth() - fw) / 2;
+        int availWidth = (int)(client.getWindow().getScaledWidth() * CHOOSER_WIDTH_FACTOR);
+        int startX = (client.getWindow().getScaledWidth() - availWidth) / 2;
         chooseImageWidget.setX(startX);
         chooseImageWidget.setY(30);
-        chooseImageWidget.setWidth(fw);
+        chooseImageWidget.setWidth(availWidth);
         chooseImageWidget.setHeight(client.getWindow().getScaledHeight() - 70);
         chooseImageWidget.init();
         addDrawableChild(doneButton);

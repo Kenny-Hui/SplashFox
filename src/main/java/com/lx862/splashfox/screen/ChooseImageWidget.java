@@ -44,8 +44,8 @@ public class ChooseImageWidget extends ClickableWidget {
     }
 
     public void init() {
-        List<ChooseButton> builtInImages = new ArrayList<>();
-        List<ChooseButton> customImages = new ArrayList<>();
+        final List<ChooseButton> builtInImages = new ArrayList<>();
+        final List<ChooseButton> customImages = new ArrayList<>();
 
         try {
             Path builtInPath = Path.of(SplashFox.class.getResource("/assets/splashfox/textures/gui/").toURI());
@@ -139,13 +139,9 @@ public class ChooseImageWidget extends ClickableWidget {
         context.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
 
         for(ButtonWidget button : subWidgets) {
+            final boolean buttonInVisibleArea = mouseY >= 30 && mouseY <= MinecraftClient.getInstance().getWindow().getScaledHeight() - 40;
             button.render(context, mouseX, mouseY, delta);
-
-            if(mouseY >= 30 && mouseY <= MinecraftClient.getInstance().getWindow().getScaledHeight() - 40) {
-                button.active = true;
-            } else {
-                button.active = false;
-            }
+            button.active = buttonInVisibleArea;
         }
 
         context.getMatrices().push();
