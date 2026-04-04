@@ -4,7 +4,7 @@ import com.lx862.splashfox.config.Config;
 import com.lx862.splashfox.data.ImagePosition;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.ARGB;
@@ -16,7 +16,7 @@ public class FoxRenderer {
     private double shiftY = 0;
     private double animationProgress = 0;
 
-    public void render(Minecraft minecraft, GuiGraphics guiGraphics, ImagePosition imagePosition, Config config, int mouseX, int mouseY, double elapsed, float alpha) {
+    public void render(Minecraft minecraft, GuiGraphicsExtractor guiGraphics, ImagePosition imagePosition, Config config, int mouseX, int mouseY, double elapsed, float alpha) {
         Identifier foxImage = config.getImageId();
 
         Matrix3x2fStack matrices = guiGraphics.pose();

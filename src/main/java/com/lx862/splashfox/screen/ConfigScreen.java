@@ -6,7 +6,7 @@ import com.lx862.splashfox.data.ScreenAlignment;
 import com.lx862.splashfox.SplashFox;
 import com.lx862.splashfox.render.FoxRenderer;
 import com.lx862.splashfox.screen.widget.SplashFoxSlider;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
@@ -132,14 +132,14 @@ public class ConfigScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        super.render(guiGraphics, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(guiGraphics, mouseX, mouseY, delta);
         elapsed += delta;
 
         // Render fox preview :D
         foxRenderer.render(minecraft, guiGraphics, ImagePosition.GUI_PREVIEW, tmpConfigInstance, mouseX, mouseY, elapsed, 1.0f);
 
-        guiGraphics.drawCenteredString(font, title, this.width / 2, 12, CommonColors.WHITE);
+        guiGraphics.centeredText(font, title, this.width / 2, 12, CommonColors.WHITE);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.HEADER_SEPARATOR, 0, 30, 0.0F, 0.0F, this.width, 2, 32, 2);
         guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.FOOTER_SEPARATOR, 0, this.height - 40, 0.0F, 0.0F, this.width, 2, 32, 2);
     }

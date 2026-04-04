@@ -6,7 +6,7 @@ import com.lx862.splashfox.data.FileSystemResourceTexture;
 import com.lx862.splashfox.screen.widget.ChooseButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
@@ -135,23 +135,23 @@ public class ChooseImageWidget extends AbstractWidget {
     }
 
     @Override
-    protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        guiGraphics.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float delta) {
+        guiGraphicsExtractor.enableScissor(getX(), getY(), getX() + getWidth(), getY() + getHeight());
 
         for(Button button : subWidgets) {
             final boolean buttonInVisibleArea = mouseY >= 30 && mouseY <= Minecraft.getInstance().getWindow().getGuiScaledHeight() - 40;
-            button.render(guiGraphics, mouseX, mouseY, delta);
+            button.extractRenderState(guiGraphicsExtractor, mouseX, mouseY, delta);
             button.active = buttonInVisibleArea;
         }
 
-        guiGraphics.pose().pushMatrix();
-        guiGraphics.pose().translate(getX(), (float)(getY() - scrolledOffset));
+        guiGraphicsExtractor.pose().pushMatrix();
+        guiGraphicsExtractor.pose().translate(getX(), (float)(getY() - scrolledOffset));
         Component customImageText = Component.translatable("splashfox.gui.custom_img");
-        guiGraphics.drawString(font, customImageText, 0, customImageSeparatorY, CommonColors.WHITE);
-        guiGraphics.fill(font.width(customImageText) + 4, customImageSeparatorY + (font.lineHeight / 2), getWidth(), customImageSeparatorY + (font.lineHeight / 2) + 1, 0xFFAAAAAA);
-        guiGraphics.pose().popMatrix();
+        guiGraphicsExtractor.text(font, customImageText, 0, customImageSeparatorY, CommonColors.WHITE);
+        guiGraphicsExtractor.fill(font.width(customImageText) + 4, customImageSeparatorY + (font.lineHeight / 2), getWidth(), customImageSeparatorY + (font.lineHeight / 2) + 1, 0xFFAAAAAA);
+        guiGraphicsExtractor.pose().popMatrix();
 
-        guiGraphics.disableScissor();
+        guiGraphicsExtractor.disableScissor();
     }
 
     @Override

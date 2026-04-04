@@ -2,7 +2,7 @@ package com.lx862.splashfox.screen;
 
 import com.lx862.splashfox.config.Config;
 import com.mojang.blaze3d.platform.Window;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -41,14 +41,14 @@ public class ChooseImageScreen extends Screen {
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta) {
-        super.render(guiGraphics, mouseX, mouseY, delta);
+    public void extractRenderState(GuiGraphicsExtractor guiGraphicsExtractor, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(guiGraphicsExtractor, mouseX, mouseY, delta);
 
-        guiGraphics.drawCenteredString(font, title, width / 2, 10, 0xFFFFFFFF);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.HEADER_SEPARATOR, 0, 30 - 2, 0.0F, 0.0F, this.width, 2, 32, 2);
-        guiGraphics.blit(RenderPipelines.GUI_TEXTURED, Screen.FOOTER_SEPARATOR, 0, height - 40, 0.0F, 0.0F, this.width, 2, 32, 2);
+        guiGraphicsExtractor.centeredText(font, title, width / 2, 10, 0xFFFFFFFF);
+        guiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, Screen.HEADER_SEPARATOR, 0, 30 - 2, 0.0F, 0.0F, this.width, 2, 32, 2);
+        guiGraphicsExtractor.blit(RenderPipelines.GUI_TEXTURED, Screen.FOOTER_SEPARATOR, 0, height - 40, 0.0F, 0.0F, this.width, 2, 32, 2);
 
-        chooseImageWidget.render(guiGraphics, mouseX, mouseY, delta);
+        chooseImageWidget.extractRenderState(guiGraphicsExtractor, mouseX, mouseY, delta);
     }
 
     @Override

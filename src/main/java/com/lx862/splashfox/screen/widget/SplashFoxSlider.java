@@ -17,7 +17,6 @@ public class SplashFoxSlider extends AbstractSliderButton {
 
     @Override
     protected void updateMessage() {
-
     }
 
     @Override

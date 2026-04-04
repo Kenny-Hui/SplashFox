@@ -6,7 +6,7 @@ import com.lx862.splashfox.SplashFox;
 import com.lx862.splashfox.data.FileSystemResourceTexture;
 import com.lx862.splashfox.render.FoxRenderer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.LoadingOverlay;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.resources.Identifier;
@@ -47,8 +47,8 @@ public class LoadingOverlayMixin {
 		}
 	}
 
-	@Inject(at = @At("TAIL"), method = "render")
-	private void splashfox$render(GuiGraphics guiGraphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+	@Inject(at = @At("TAIL"), method = "extractRenderState")
+	private void splashfox$render(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
 		splashfox$ensureTextureRegistered();
 
 		if(renderer == null) renderer = new FoxRenderer();
