@@ -15,7 +15,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.CommonColors;
-import net.minecraft.util.Tuple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,13 +40,13 @@ public class ConfigScreen extends Screen {
         super.init();
 
         int curY = 40;
-        List<Tuple<String, Integer>> labels = new ArrayList<>();
+        List<ConfigScreenLabel> labels = new ArrayList<>();
 
         Button chooseImageButton = new Button.Builder(Component.translatable("splashfox.gui.choose"), (d) -> {
             ChooseImageScreen chooseImageScreen = new ChooseImageScreen(this, tmpConfigInstance);
-            minecraft.setScreen(chooseImageScreen);
+            minecraft.gui.setScreen(chooseImageScreen);
         }).pos(getX(100, ScreenAlignment.RIGHT), curY).width(100).build();
-        labels.add(new Tuple<>("splashfox.gui.choose_img", curY));
+        labels.add(ConfigScreenLabel.create("splashfox.gui.choose_img", curY));
         addRenderableWidget(chooseImageButton);
 
         curY += 20;
@@ -55,7 +54,7 @@ public class ConfigScreen extends Screen {
         SplashFoxSlider speedSlider = new SplashFoxSlider(getX(100, ScreenAlignment.RIGHT), curY, 100, 20, Component.literal(String.valueOf(tmpConfigInstance.speed)), tmpConfigInstance.speed, 2, (slider) -> {
             tmpConfigInstance.speed = slider.getValue();
         });
-        labels.add(new Tuple<>("splashfox.gui.speed", curY));
+        labels.add(ConfigScreenLabel.create("splashfox.gui.speed", curY));
         addRenderableWidget(speedSlider);
 
         curY += 20;
@@ -63,7 +62,7 @@ public class ConfigScreen extends Screen {
         SplashFoxSlider dropHeightSlider = new SplashFoxSlider(getX(100, ScreenAlignment.RIGHT), curY, 100, 20, Component.literal(String.valueOf(tmpConfigInstance.dropHeight)), tmpConfigInstance.dropHeight, 3, (slider) -> {
             tmpConfigInstance.dropHeight = slider.getValue();
         });
-        labels.add(new Tuple<>("splashfox.gui.drop_height", curY));
+        labels.add(ConfigScreenLabel.create("splashfox.gui.drop_height", curY));
         addRenderableWidget(dropHeightSlider);
 
         curY += 20;
@@ -71,7 +70,7 @@ public class ConfigScreen extends Screen {
         SplashFoxSlider foxSizeSlider = new SplashFoxSlider(getX(100, ScreenAlignment.RIGHT), curY, 100, 20, Component.literal(String.valueOf(tmpConfigInstance.foxSize)), tmpConfigInstance.foxSize, 2, (slider) -> {
             tmpConfigInstance.foxSize = slider.getValue();
         });
-        labels.add(new Tuple<>("splashfox.gui.blobfox_size", curY));
+        labels.add(ConfigScreenLabel.create("splashfox.gui.blobfox_size", curY));
         addRenderableWidget(foxSizeSlider);
 
         curY += 20;
@@ -83,7 +82,7 @@ public class ConfigScreen extends Screen {
                     tmpConfigInstance.flipped = checked;
                 }).build();
         flippedCheckbox.setX(getX(flippedCheckbox, ScreenAlignment.RIGHT));
-        labels.add(new Tuple<>("splashfox.gui.flipped", curY));
+        labels.add(ConfigScreenLabel.create("splashfox.gui.flipped", curY));
         addRenderableWidget(flippedCheckbox);
 
         curY += 20;
@@ -95,7 +94,7 @@ public class ConfigScreen extends Screen {
                     tmpConfigInstance.wobbly = checked;
                 }).build();
         wobblyCheckbox.setX(getX(wobblyCheckbox, ScreenAlignment.RIGHT));
-        labels.add(new Tuple<>("splashfox.gui.wobbly", curY));
+        labels.add(ConfigScreenLabel.create("splashfox.gui.wobbly", curY));
         addRenderableWidget(wobblyCheckbox);
 
         curY += 20;
@@ -107,7 +106,7 @@ public class ConfigScreen extends Screen {
             d.setMessage(Component.translatable("splashfox.gui.position." + tmpConfigInstance.position.toString()));
         }).pos(getX(120, ScreenAlignment.RIGHT), curY).width(120).build();
 
-        labels.add(new Tuple<>("splashfox.gui.position", curY));
+        labels.add(ConfigScreenLabel.create("splashfox.gui.position", curY));
         addRenderableWidget(positionButton);
 
         Button discardButton = new Button.Builder(Component.translatable("splashfox.gui.discard_config"),
@@ -123,10 +122,10 @@ public class ConfigScreen extends Screen {
         }).pos(getX((MAX_WIDTH/2), ScreenAlignment.RIGHT), this.height - 30).width(MAX_WIDTH / 2).build();
         addRenderableWidget(saveButton);
 
-        for(Tuple<String, Integer> label : labels) {
-            StringWidget labelWidget = new StringWidget(Component.translatable(label.getA()), font);
+        for(ConfigScreenLabel label : labels) {
+            StringWidget labelWidget = new StringWidget(label.component(), font);
             labelWidget.setX(getStartX());
-            labelWidget.setY(label.getB() + font.lineHeight);
+            labelWidget.setY(label.y() + font.lineHeight);
             addRenderableWidget(labelWidget);
         }
     }
@@ -146,7 +145,7 @@ public class ConfigScreen extends Screen {
 
     @Override
     public void onClose() {
-        minecraft.setScreen(parentScreen);
+        minecraft.gui.setScreen(parentScreen);
     }
 
     private int getX(int width, ScreenAlignment type) {
@@ -175,5 +174,11 @@ public class ConfigScreen extends Screen {
 
     private int getStartX() {
         return getX(0, ScreenAlignment.LEFT);
+    }
+
+    record ConfigScreenLabel(Component component, int y) {
+        public static ConfigScreenLabel create(String translationKey, int y) {
+            return new ConfigScreenLabel(Component.translatable(translationKey), y);
+        }
     }
 }
